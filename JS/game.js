@@ -51,7 +51,7 @@
 		y: seg.y * gridSize,
 		width: gridSize,
 		height: gridSize,
-		fill: trailColor // plus besoin d'alpha
+		fill: trailColor
 	  });
 	  svgCanvas.appendChild(rect);
 	}
@@ -96,5 +96,6 @@
     }
     
 function goToHome(){ 
-    showScreen('homeScreen');
+  document.getElementById('gameOverScreen').style.display = 'none';
+  showScreen('homeScreen');
 }
