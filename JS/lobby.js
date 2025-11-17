@@ -8,15 +8,13 @@ function showScreen(id) {
 }
 
 function goToLobby() {
-  ws.send(
-    JSON.stringify({
-      type: "getAllLobbies",
-      playerId: id,
-    })
-  );
+  ws.send(JSON.stringify({
+    type: "getAllLobbies",
+    playerId: id,
+  }));
   showScreen("lobbyScreen");
-  renderLobbies();
 }
+
 
 function toggleLobbyForm() {
   const form = document.getElementById("createLobbyForm");
@@ -43,38 +41,34 @@ function createLobby() {
   showScreen("gameScreen");
 }
 
-async function renderLobbies() {
+async function renderLobbies(data) {
   console.log("entré dans render lobby");
-  // pourquoi ça print 2 fois?
-  try {
-    let gamesArray = await getGamesData();
-    console.log("games array", gamesArray);
 
-    if (gamesArray === null) {
-      return;
-    }
-    const list = document.getElementById("lobbyList");
-    list.innerHTML = "";
-    if (gamesArray.length === 0) {
-      list.innerHTML = "<p>Aucun lobby créé pour le moment.</p>";
-      return;
-    }
-    console.log("GAMES_ARRAY ", gamesArray);
-    // On affiche chaque lobby courant
-    gamesArray.forEach((lobby) => {
-      const div = document.createElement("div");
-      div.className = "lobbyItem";
-      div.innerHTML = `
-		<strong>${lobby.gameName}</strong><br>
-		Joueurs: ${lobby.currentPlayers}/${lobby.maxPlayers}<br>
-		<button onclick="joinGame(${lobby.gameId})">Rejoindre le lobby</button>
-	  `;
-      list.appendChild(div);
-    });
-  } catch (e) {
-    console.log(e);
+  let gamesArray = await getGamesData(data);
+  console.log("games array", gamesArray);
+
+  if (gamesArray === null) return;
+
+  const list = document.getElementById("lobbyList");
+  list.innerHTML = "";
+
+  if (gamesArray.length === 0) {
+    list.innerHTML = "<p>Aucun lobby créé pour le moment.</p>";
+    return;
   }
+
+  gamesArray.forEach((lobby) => {
+    const div = document.createElement("div");
+    div.className = "lobbyItem";
+    div.innerHTML = `
+        <strong>${lobby.gameName}</strong><br>
+        Joueurs: ${lobby.currentPlayers}/${lobby.maxPlayers}<br>
+        <button onclick="joinGame('${lobby.gameId}')">Rejoindre le lobby</button>
+    `;
+    list.appendChild(div);
+  });
 }
+
 
 function joinGame(gameId) {}
 

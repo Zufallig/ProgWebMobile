@@ -15,8 +15,8 @@ ws.onmessage = function (message) {
     case "createGameResponse":
       getGameId(data);
       break;
-    case "getAllLobbiesResponse":
-      getGamesData(data);
+    case "getAllLobbiesResponse":        
+      renderLobbies(data);
       break;
     case "joinGameResponse":
       if (data.valid) {
