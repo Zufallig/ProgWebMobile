@@ -70,7 +70,16 @@ async function renderLobbies(data) {
 }
 
 
-function joinGame(gameId) {}
+function joinGame(gameId) {
+  console.log("Tentative de rejoindre la partie :", gameId);
+
+  ws.send(JSON.stringify({
+    type: "joinGame",
+    playerId: id,
+    gameId: gameId 
+  }));
+}
+
 
 async function getGameId(data) {
   if (data.valid) {

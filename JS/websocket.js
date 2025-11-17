@@ -18,13 +18,20 @@ ws.onmessage = function (message) {
     case "getAllLobbiesResponse":        
       renderLobbies(data);
       break;
-    case "joinGameResponse":
-      if (data.valid) {
-        // Afficher interface lobby
-      } else {
-        // Afficher une erreur
-      }
-      break;
+	case "joinGameResponse":
+	  if (data.valid) {
+		console.log("Rejoint avec succès :", data);
+
+		// Enregistrer l'ID de la partie
+		gameId = data.gameId;
+
+		// Aller sur la scène de jeu
+		showScreen("gameScreen");
+	  } else {
+		alert("Impossible de rejoindre : " + data.reason);
+	  }
+	  break;
+	  
     case "playerReadyResponse":
       if (data.valid) {
         // Afficher joueur prêt
