@@ -1,21 +1,17 @@
-// Create the Web socket !
 const ws = new WebSocket("ws://localhost:9898/");
 ws.onopen = function () {
   console.log("WebSocket Client Connected");
 
   // Connexion du joueur
 };
-ws.onmessage = function (e) {
-  let data = JSON.parse(message.utf8Data);
+ws.onmessage = function (message) {
+  console.log(message);
+  let data = JSON.parse(message.data);
 
-  console.log("Received: '" + e.data + "'");
+  console.log("Received: '" + message.data + "'");
   switch (data.type) {
     case "connectionResponse":
-      if (data.valid) {
-        // Laisser entrer le joueur
-      } else {
-        // Ne pas laisser entrer le joueur
-      }
+      checkValid(data);
       break;
     case "createGameResponse":
       if (data.valid) {

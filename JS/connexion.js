@@ -1,4 +1,5 @@
 let username = "";
+let id = "";
 let lobbies = [];
 
 //Fonction permettant le login ou la création d'un utilisateur
@@ -20,10 +21,20 @@ function validateLogin() {
     document.getElementById(
       "connectedUser"
     ).textContent = `Connecté en tant que ${user}`;
-    showScreen("homeScreen");
+    console.log("connexion pw ");
+    //     if (isPasswordValid) {
+    //     }
+    //   } else {
+    //     alert("Entrez un login et un mot de passe");
+  }
+}
 
-    return user, pass;
+async function checkValid(data) {
+  if (data.valid) {
+    id = data.playerId;
+    showScreen("homeScreen");
   } else {
-    alert("Entrez un login et un mot de passe");
+    // mettre un msg d'erreur
+    alert("mdp invalide");
   }
 }
