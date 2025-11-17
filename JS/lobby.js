@@ -8,13 +8,14 @@ function showScreen(id) {
 }
 
 function goToLobby() {
-  ws.send(JSON.stringify({
-    type: "getAllLobbies",
-    playerId: id,
-  }));
+  ws.send(
+    JSON.stringify({
+      type: "getAllLobbies",
+      playerId: id,
+    })
+  );
   showScreen("lobbyScreen");
 }
-
 
 function toggleLobbyForm() {
   const form = document.getElementById("createLobbyForm");
@@ -69,20 +70,20 @@ async function renderLobbies(data) {
   });
 }
 
-
 function joinGame(gameId) {
   console.log("Tentative de rejoindre la partie :", gameId);
 
-  ws.send(JSON.stringify({
-    type: "joinGame",
-    playerId: id,
-    gameId: gameId 
-  }));
+  ws.send(
+    JSON.stringify({
+      type: "joinGame",
+      playerId: id,
+      gameId: gameId,
+    })
+  );
 }
 
-
 async function getGameId(data) {
-  if (data.valid) {
+  if (data.valid && data.creatorId === id) {
     gameId = data.gameId;
   } else {
     alert(data.reason);

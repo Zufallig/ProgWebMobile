@@ -13,7 +13,11 @@ ws.onmessage = function (message) {
       checkValid(data);
       break;
     case "createGameResponse":
-      getGameId(data);
+      // Si l'id du joueur actuel correspond à l'id du créateur de la game,
+      // on stocke l'id de la game
+      if (data.creatorId === id) {
+        getGameId(data);
+      }
       ws.send(
         JSON.stringify({
           type: "getAllLobbies",
@@ -22,6 +26,13 @@ ws.onmessage = function (message) {
       );
 
       break;
+    case "updateLobbyInfos":
+      ws.send(
+        JSON.stringify({
+          type: "getAllLobbies",
+          playerId: id,
+        })
+      );
     case "getAllLobbiesResponse":
       renderLobbies(data);
       break;
