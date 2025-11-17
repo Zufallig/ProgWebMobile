@@ -9,7 +9,7 @@
 
     function restartGame(){
       document.getElementById('gameOverScreen').style.display = 'none';
-      startGame();
+      document.getElementById('readyButton').style.visibility = 'visible';
     }
 
     function startGame(){
@@ -98,4 +98,9 @@
 function goToHome(){ 
   document.getElementById('gameOverScreen').style.display = 'none';
   showScreen('homeScreen');
+}
+
+function readyGame(){
+  document.getElementById("readyButton").style.visibility= "collapse";
+  startGame()
 }

@@ -21,6 +21,7 @@ function toggleLobbyForm(){
 	document.getElementById('lobbyNameInput').value = "";
 	toggleLobbyForm();
 	renderLobbies();
+	showScreen('gameScreen');
 	}
 
 	function renderLobbies(){
@@ -36,7 +37,7 @@ function toggleLobbyForm(){
 	  div.innerHTML = `
 		<strong>${lobby.name}</strong><br>
 		Joueurs: ${lobby.players.length}/${lobby.maxPlayers}<br>
-		<button onclick="startGame()">Jouer</button>
+		<button onclick="showScreen('gameScreen')">Rejoindre</button>
 	  `;
 	  list.appendChild(div);
 	});
