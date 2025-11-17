@@ -1,6 +1,5 @@
 let username = "";
 let id = "";
-let lobbies = [];
 
 //Fonction permettant le login ou la création d'un utilisateur
 function validateLogin() {
@@ -21,7 +20,6 @@ function validateLogin() {
     document.getElementById(
       "connectedUser"
     ).textContent = `Connecté en tant que ${user}`;
-    console.log("connexion pw ");
     //     if (isPasswordValid) {
     //     }
     //   } else {

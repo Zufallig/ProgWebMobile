@@ -5,7 +5,6 @@ ws.onopen = function () {
   // Connexion du joueur
 };
 ws.onmessage = function (message) {
-  console.log(message);
   let data = JSON.parse(message.data);
 
   console.log("Received: '" + message.data + "'");
@@ -14,11 +13,10 @@ ws.onmessage = function (message) {
       checkValid(data);
       break;
     case "createGameResponse":
-      if (data.valid) {
-        // Afficher interface lobby
-      } else {
-        // Afficher une erreur
-      }
+      getGameId(data);
+      break;
+    case "getAllLobbiesResponse":
+      getGamesData(data);
       break;
     case "joinGameResponse":
       if (data.valid) {

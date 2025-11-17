@@ -1,3 +1,5 @@
+let gameId = "";
+
 function showScreen(id) {
   document
     .querySelectorAll(".screen")
@@ -6,6 +8,12 @@ function showScreen(id) {
 }
 
 function goToLobby() {
+  ws.send(
+    JSON.stringify({
+      type: "getAllLobbies",
+      playerId: id,
+    })
+  );
   showScreen("lobbyScreen");
   renderLobbies();
 }
@@ -29,27 +37,61 @@ function createLobby() {
       gameName: name,
     })
   );
-  lobbies.push({ id: Date.now(), name, maxPlayers, players: [username] });
+
   document.getElementById("lobbyNameInput").value = "";
   toggleLobbyForm();
-  renderLobbies();
+  showScreen("gameScreen");
 }
 
-function renderLobbies() {
-  const list = document.getElementById("lobbyList");
-  list.innerHTML = "";
-  if (lobbies.length === 0) {
-    list.innerHTML = "<p>Aucun lobby créé pour le moment.</p>";
-    return;
-  }
-  lobbies.forEach((lobby) => {
-    const div = document.createElement("div");
-    div.className = "lobbyItem";
-    div.innerHTML = `
-		<strong>${lobby.name}</strong><br>
-		Joueurs: ${lobby.players.length}/${lobby.maxPlayers}<br>
-		<button onclick="startGame()">Rejoindre le lobby</button>
+async function renderLobbies() {
+  console.log("entré dans render lobby");
+  // pourquoi ça print 2 fois?
+  try {
+    let gamesArray = await getGamesData();
+    console.log("games array", gamesArray);
+
+    if (gamesArray === null) {
+      return;
+    }
+    const list = document.getElementById("lobbyList");
+    list.innerHTML = "";
+    if (gamesArray.length === 0) {
+      list.innerHTML = "<p>Aucun lobby créé pour le moment.</p>";
+      return;
+    }
+    console.log("GAMES_ARRAY ", gamesArray);
+    // On affiche chaque lobby courant
+    gamesArray.forEach((lobby) => {
+      const div = document.createElement("div");
+      div.className = "lobbyItem";
+      div.innerHTML = `
+		<strong>${lobby.gameName}</strong><br>
+		Joueurs: ${lobby.currentPlayers}/${lobby.maxPlayers}<br>
+		<button onclick="joinGame(${lobby.gameId})">Rejoindre le lobby</button>
 	  `;
-    list.appendChild(div);
-  });
+      list.appendChild(div);
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function joinGame(gameId) {}
+
+async function getGameId(data) {
+  if (data.valid) {
+    gameId = data.gameId;
+  } else {
+    alert(data.reason);
+    return -1;
+  }
+}
+
+async function getGamesData(data) {
+  if (data === undefined) {
+    return null;
+  }
+  console.log("entre dans game data");
+  console.log(data.lobbies);
+  return data.lobbies;
 }
