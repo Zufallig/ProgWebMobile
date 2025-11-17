@@ -4,11 +4,6 @@ ws.onopen = function () {
   console.log("WebSocket Client Connected");
 
   // Connexion du joueur
-  sendConnection({
-    type: "connectionPlayer",
-    username: "alesx",
-    password: "1234",
-  });
 };
 ws.onmessage = function (e) {
   let data = JSON.parse(message.utf8Data);
@@ -64,5 +59,3 @@ ws.onmessage = function (e) {
 function sendConnection(data) {
   ws.send(JSON.stringify(data));
 }
-
-modules.exports = ws;
