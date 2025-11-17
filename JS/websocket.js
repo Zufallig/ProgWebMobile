@@ -14,24 +14,31 @@ ws.onmessage = function (message) {
       break;
     case "createGameResponse":
       getGameId(data);
+      ws.send(
+        JSON.stringify({
+          type: "getAllLobbies",
+          playerId: id,
+        })
+      );
+
       break;
-    case "getAllLobbiesResponse":        
+    case "getAllLobbiesResponse":
       renderLobbies(data);
       break;
-	case "joinGameResponse":
-	  if (data.valid) {
-		console.log("Rejoint avec succès :", data);
+    case "joinGameResponse":
+      if (data.valid) {
+        console.log("Rejoint avec succès :", data);
 
-		// Enregistrer l'ID de la partie
-		gameId = data.gameId;
+        // Enregistrer l'ID de la partie
+        gameId = data.gameId;
 
-		// Aller sur la scène de jeu
-		showScreen("gameScreen");
-	  } else {
-		alert("Impossible de rejoindre : " + data.reason);
-	  }
-	  break;
-	  
+        // Aller sur la scène de jeu
+        showScreen("gameScreen");
+      } else {
+        alert("Impossible de rejoindre : " + data.reason);
+      }
+      break;
+
     case "playerReadyResponse":
       if (data.valid) {
         // Afficher joueur prêt
