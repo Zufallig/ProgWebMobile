@@ -43,10 +43,7 @@ function createLobby() {
 }
 
 async function renderLobbies(data) {
-  console.log("entré dans render lobby");
-
   let gamesArray = await getGamesData(data);
-  console.log("games array", gamesArray);
 
   if (gamesArray === null) return;
 
@@ -80,11 +77,30 @@ function joinGame(gameId) {
       gameId: gameId,
     })
   );
+  // TEMPORAIRE : on met immédiatement Ready après avoir rejoint
+  ws.send(
+    JSON.stringify({
+      type: "playerReady",
+      playerId: id,
+      gameId: gameId,
+      ready: true,
+    })
+  );
 }
 
 async function getGameId(data) {
   if (data.valid && data.creatorId === id) {
     gameId = data.gameId;
+
+    // TEMPORAIRE : on met immédiatement Ready après avoir rejoint
+    ws.send(
+      JSON.stringify({
+        type: "playerReady",
+        playerId: id,
+        gameId: gameId,
+        ready: true,
+      })
+    );
   } else {
     alert(data.reason);
     return -1;
@@ -95,7 +111,14 @@ async function getGamesData(data) {
   if (data === undefined) {
     return null;
   }
-  console.log("entre dans game data");
   console.log(data.lobbies);
   return data.lobbies;
+}
+
+function showCountdown(gameIdParam, count) {
+  if (gameId == gameIdParam && count > 0) {
+    console.log("COUNT: ", count);
+  } else if (count === 0) {
+    console.log("START");
+  }
 }

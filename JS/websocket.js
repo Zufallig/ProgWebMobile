@@ -52,14 +52,20 @@ ws.onmessage = function (message) {
 
     case "playerReadyResponse":
       if (data.valid) {
-        // Afficher joueur prêt
+        // Changer l'interface pour afficher joueur prêt
       } else {
         // Afficher une erreur
+        alert("Erreur : " + data.reason);
       }
       break;
     case "countdown":
-      // Affiche le cout
-      // data.count
+      // Affiche le countdown dans la game
+      showCountdown(gameId, data.count);
+
+      // Démarrage de la partie
+      if (data.count === 0) {
+        startGame();
+      }
       break;
     case "playerMovementResponse":
       if (data.valid) {
@@ -69,8 +75,15 @@ ws.onmessage = function (message) {
       }
       break;
     case "updateAllPlayerMovements":
+      if (gameStarted) {
+        updatePlayers(data.players);
+      }
       break;
     case "endGame":
+      alert("FIN DE PARTIE");
+      if (data.winnerId != id) {
+        gameOver();
+      }
       break;
   }
 };
