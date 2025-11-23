@@ -25,6 +25,7 @@ function toggleLobbyForm() {
 function createLobby() {
   const name = document.getElementById("lobbyNameInput").value.trim();
   const maxPlayers = document.getElementById("maxPlayersInput").value;
+  const color = document.getElementById("colorPicker").value; // M : ajout couleur
 
   if (!name) return alert("Veuillez entrer un nom de lobby !");
 
@@ -34,6 +35,7 @@ function createLobby() {
       maxPlayers: maxPlayers,
       creatorId: id,
       gameName: name,
+      color: color, // M : envoi couleur
     })
   );
 
@@ -71,12 +73,14 @@ async function renderLobbies(data) {
 
 function joinGame(gameId) {
   console.log("Tentative de rejoindre la partie :", gameId);
+  const color = document.getElementById("colorPicker").value; // M : pareil ajout couleur
 
   ws.send(
     JSON.stringify({
       type: "joinGame",
       playerId: id,
       gameId: gameId,
+      color: color, // M : envoi de la couleur choisie
     })
   );
 }

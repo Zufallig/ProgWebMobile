@@ -56,10 +56,13 @@ function updatePlayers(players) {
     if (!playersState[player.id]) {
       playersState[player.id] = {
         trail: [],
+        color: player.color || trailColor, // M : couleur du joueur ou couleur par défaut
       };
     }
 
     const state = playersState[player.id];
+    // M : mise à jour de la couleur
+    state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
 
     // si joueur mort, on continue d'afficher son trail
     if (!player.alive) {
