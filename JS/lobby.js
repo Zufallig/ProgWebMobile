@@ -99,9 +99,11 @@ async function getGamesData(data) {
 }
 
 function showCountdown(gameIdParam, count) {
+  // A la place de "Prêt", on affiche le countdown dans le bouton ready
+  let readyButton = document.getElementById("readyBtn");
   if (gameId == gameIdParam && count > 0) {
-    console.log("COUNT: ", count);
+    readyButton.textContent = count + "...";
   } else if (count === 0) {
-    console.log("START");
+    readyButton.textContent = "Partez !";
   }
 }
