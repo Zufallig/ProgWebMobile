@@ -11,6 +11,14 @@ let trailColor = "#00ffff";
 
 function restartGame() {
   document.getElementById("gameOverScreen").style.display = "none";
+  // Envoi au serveur que l'on souhaite rejouer
+  ws.send(
+    JSON.stringify({
+      type: "restartGame",
+      playerId: id,
+      gameId: gameId,
+    })
+  );
   startGame();
 }
 
@@ -24,6 +32,17 @@ function startGame() {
 
   // document.getElementById("scoreDisplay").textContent = "Score: 0";
   document.getElementById("globalMobileControls").style.display = "flex";
+}
+
+function setReady() {
+  ws.send(
+    JSON.stringify({
+      type: "playerReady",
+      playerId: id,
+      gameId: gameId,
+      ready: true,
+    })
+  );
 }
 
 /* -----------------------------

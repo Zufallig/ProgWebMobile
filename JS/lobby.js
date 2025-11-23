@@ -50,6 +50,8 @@ async function renderLobbies(data) {
   const list = document.getElementById("lobbyList");
   list.innerHTML = "";
 
+  console.log("GAMESARRAY : " + gamesArray);
+
   if (gamesArray.length === 0) {
     list.innerHTML = "<p>Aucun lobby créé pour le moment.</p>";
     return;
@@ -77,30 +79,11 @@ function joinGame(gameId) {
       gameId: gameId,
     })
   );
-  // TEMPORAIRE : on met immédiatement Ready après avoir rejoint
-  ws.send(
-    JSON.stringify({
-      type: "playerReady",
-      playerId: id,
-      gameId: gameId,
-      ready: true,
-    })
-  );
 }
 
 async function getGameId(data) {
   if (data.valid && data.creatorId === id) {
     gameId = data.gameId;
-
-    // TEMPORAIRE : on met immédiatement Ready après avoir rejoint
-    ws.send(
-      JSON.stringify({
-        type: "playerReady",
-        playerId: id,
-        gameId: gameId,
-        ready: true,
-      })
-    );
   } else {
     alert(data.reason);
     return -1;
@@ -111,7 +94,7 @@ async function getGamesData(data) {
   if (data === undefined) {
     return null;
   }
-  console.log(data.lobbies);
+  console.log("Lobbies: " + data.lobbies);
   return data.lobbies;
 }
 

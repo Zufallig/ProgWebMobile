@@ -38,7 +38,7 @@ ws.onmessage = function (message) {
       break;
     case "joinGameResponse":
       if (data.valid) {
-        console.log("Rejoint avec succès :", data);
+        console.log("Rejoint avec succès");
 
         // Enregistrer l'ID de la partie
         gameId = data.gameId;
@@ -53,6 +53,10 @@ ws.onmessage = function (message) {
     case "playerReadyResponse":
       if (data.valid) {
         // Changer l'interface pour afficher joueur prêt
+        let readyButton = document.getElementById("readyBtn");
+        readyButton.textContent = "Prêt ! ";
+        readyButton.style.backgroundColor = "#ff00ff";
+        readyButton.style.color = "#111";
       } else {
         // Afficher une erreur
         alert("Erreur : " + data.reason);
