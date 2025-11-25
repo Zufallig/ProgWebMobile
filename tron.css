@@ -92,8 +92,9 @@ button:hover {
   background: black;
 }
 
-/* --- ÉCRAN DE GAME OVER --- */
-#gameEndedScreen {
+/* --- ÉCRAN DE GAME OVER & ÉCRAN D'ERREUR--- */
+#gameEndedScreen,
+#errorScreen {
   position: absolute;
   top: 50%;
   left: 50%;

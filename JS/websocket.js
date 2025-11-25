@@ -46,7 +46,7 @@ ws.onmessage = function (message) {
         // Aller sur la scène de jeu
         showScreen("gameScreen");
       } else {
-        alert("Impossible de rejoindre : " + data.reason);
+        showErrorScreen("Impossible de rejoindre : " + data.reason);
       }
       break;
 
@@ -59,7 +59,7 @@ ws.onmessage = function (message) {
         readyButton.style.color = "#111";
       } else {
         // Afficher une erreur
-        alert("Erreur : " + data.reason);
+        showErrorScreen(data.reason);
       }
       break;
     case "countdown":

@@ -27,7 +27,7 @@ function createLobby() {
   const maxPlayers = document.getElementById("maxPlayersInput").value;
   const color = document.getElementById("colorPicker").value; // M : ajout couleur
 
-  if (!name) return alert("Veuillez entrer un nom de lobby !");
+  if (!name) return showErrorScreen("Veuillez entrer un nom de lobby !");
 
   ws.send(
     JSON.stringify({
@@ -90,7 +90,7 @@ async function getGameId(data) {
   if (data.valid && data.creatorId === id) {
     gameId = data.gameId;
   } else {
-    alert(data.reason);
+    showErrorScreen(data.reason);
     return -1;
   }
 }

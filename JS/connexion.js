@@ -23,7 +23,7 @@ function validateLogin() {
     //     if (isPasswordValid) {
     //     }
     //   } else {
-    //     alert("Entrez un login et un mot de passe");
+    //     showErrorScreen("Entrez un login et un mot de passe");
   }
 }
 
@@ -32,7 +32,7 @@ async function checkValid(data) {
     id = data.playerId;
     showScreen("homeScreen");
   } else {
-    // mettre un msg d'erreur
-    alert("mdp invalide");
+    // Message d'erreur
+    showErrorScreen("Mot de passe invalide");
   }
 }

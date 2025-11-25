@@ -123,3 +123,13 @@ function goToHome() {
   document.getElementById("gameEndedScreen").style.display = "none";
   showScreen("homeScreen");
 }
+
+function closeErrorScreen() {
+  document.getElementById("errorScreen").style.display = "none";
+}
+
+function showErrorScreen(message) {
+  document.getElementById("errorScreen").style.display = "block";
+  document.getElementById("errorText").textContent =
+    message || "Une erreur est survenue";
+}
