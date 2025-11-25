@@ -45,9 +45,10 @@ function createLobby() {
 }
 
 async function renderLobbies(data) {
+  console.log("Entrée dans renderLobbies");
   let gamesArray = await getGamesData(data);
 
-  if (gamesArray === null) return;
+  if (!gamesArray) return;
 
   const list = document.getElementById("lobbyList");
   list.innerHTML = "";
