@@ -10,7 +10,7 @@ let playersState = {};
 let trailColor = "#00ffff";
 
 function restartGame() {
-  document.getElementById("gameOverScreen").style.display = "none";
+  document.getElementById("gameEndedScreen").style.display = "none";
   // Envoi au serveur que l'on souhaite rejouer
   ws.send(
     JSON.stringify({
@@ -95,11 +95,11 @@ function renderTrail(playerState) {
 /* -----------------------------
        FIN DE PARTIE
     ----------------------------- */
-function gameOver(reason) {
+function gameEnded(message) {
   svgCanvas.innerHTML = "";
   document.getElementById("finalScoreText").textContent =
-    reason || "Fin de la partie";
-  document.getElementById("gameOverScreen").style.display = "block";
+    message || "Fin de la partie";
+  document.getElementById("gameEndedScreen").style.display = "block";
   document.getElementById("globalMobileControls").style.display = "none";
 }
 
@@ -120,6 +120,6 @@ function trailColorToRGBA(hex, alpha) {
 }
 
 function goToHome() {
-  document.getElementById("gameOverScreen").style.display = "none";
+  document.getElementById("gameEndedScreen").style.display = "none";
   showScreen("homeScreen");
 }

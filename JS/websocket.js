@@ -84,10 +84,12 @@ ws.onmessage = function (message) {
       }
       break;
     case "endGame":
-      alert("FIN DE PARTIE");
-      if (data.winnerId != id) {
-        gameOver();
+      if (data.winnerId === id) {
+        gameEnded("Vous avez gagné ! ");
+      } else {
+        gameEnded("Vous avez perdu...");
       }
+
       break;
   }
 };
