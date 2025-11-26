@@ -3,9 +3,8 @@
     ----------------------------- */
 let svgCanvas;
 let gameStarted = false;
-const gridSize = 6;
-const canvasWidth = 600,
-  canvasHeight = 600;
+// Valeur à mettre en accord avec la taille de svgCanvas (dans le HTML) pour prendre en compte taille du jeu 100*100
+const squareSize = 3;
 let playersState = {};
 let trailColor = "#00ffff";
 
@@ -25,6 +24,7 @@ function restartGame() {
 function startGame() {
   gameStarted = true;
   svgCanvas = document.getElementById("svgCanvas");
+
   trailColor = document.getElementById("colorPicker").value;
   svgCanvas.innerHTML = "";
   // Reset de l'état des joueurs
@@ -78,14 +78,13 @@ function updatePlayers(players) {
 }
 
 function renderTrail(playerState) {
-  const color = playerState.color || "#00ffff"; // fallback
-
+  const color = playerState.color;
   playerState.trail.forEach((seg) => {
     const rect = createSvgElement("rect", {
-      x: seg.x * gridSize,
-      y: seg.y * gridSize,
-      width: gridSize,
-      height: gridSize,
+      x: seg.x * squareSize,
+      y: seg.y * squareSize,
+      width: squareSize,
+      height: squareSize,
       fill: color,
     });
     svgCanvas.appendChild(rect);
