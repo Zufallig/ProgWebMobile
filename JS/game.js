@@ -101,6 +101,10 @@ function gameEnded(message) {
     message || "Fin de la partie";
   document.getElementById("gameEndedScreen").style.display = "block";
   document.getElementById("globalMobileControls").style.display = "none";
+  let readyButton = document.getElementById("readyBtn");
+  readyButton.textContent = "Prêt ? ";
+  readyButton.style.backgroundColor = "#111";
+  readyButton.style.color = "#fff";
 }
 
 /* -----------------------------
