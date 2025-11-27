@@ -18,7 +18,32 @@ function restartGame() {
       gameId: gameId,
     })
   );
-  startGame();
+}
+
+function showJoinRestartedGame(data) {
+  console.log("new game: " + data.gameId);
+  let restartBtn = document.getElementById("restartBtn");
+  restartBtn.textContent = "Rejoindre";
+  document.getElementById("gameEndText").textContent =
+    data.playerName + " veut rejouer !";
+  // On change l'action réalisée par le bouton, pour ne pas recréer une autre partie en
+  // plus de la nouvelle créée par un autre joueur
+  restartBtn.onclick = () => {
+    joinRestartedGame(data.gameId);
+  };
+}
+
+function joinRestartedGame(gameIdToJoin) {
+  document.getElementById("gameEndedScreen").style.display = "none";
+  // On tente de rejoindre la partie
+  ws.send(
+    JSON.stringify({
+      type: "joinGame",
+      playerId: id,
+      gameId: gameIdToJoin,
+      color: trailColor,
+    })
+  );
 }
 
 function startGame() {
@@ -96,7 +121,7 @@ function renderTrail(playerState) {
     ----------------------------- */
 function gameEnded(message) {
   svgCanvas.innerHTML = "";
-  document.getElementById("finalScoreText").textContent =
+  document.getElementById("gameEndText").textContent =
     message || "Fin de la partie";
   document.getElementById("gameEndedScreen").style.display = "block";
   document.getElementById("globalMobileControls").style.display = "none";

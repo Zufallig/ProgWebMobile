@@ -89,8 +89,13 @@ ws.onmessage = function (message) {
       } else {
         gameEnded("Vous avez perdu...");
       }
-
       break;
+    case "restartGameResponse":
+      if (data.valid) {
+        showJoinRestartedGame(data);
+      } else {
+        showErrorScreen(data.reason);
+      }
   }
 };
 
