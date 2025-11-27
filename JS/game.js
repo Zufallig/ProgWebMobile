@@ -21,7 +21,6 @@ function restartGame() {
 }
 
 function showJoinRestartedGame(data) {
-  console.log("new game: " + data.gameId);
   let restartBtn = document.getElementById("restartBtn");
   restartBtn.textContent = "Rejoindre";
   document.getElementById("gameEndText").textContent =
@@ -57,6 +56,12 @@ function startGame() {
 
   // document.getElementById("scoreDisplay").textContent = "Score: 0";
   document.getElementById("globalMobileControls").style.display = "flex";
+
+  // Reset texte fin partie et fonction restart game
+  document.getElementById("gameEndText").textContent = "Fin de la partie";
+  let restartBtn = document.getElementById("restartBtn");
+  restartBtn.textContent = "Rejouer";
+  restartBtn.onclick = restartGame;
 }
 
 function setReady() {

@@ -1,6 +1,6 @@
 const ws = new WebSocket("ws://localhost:9898/");
 ws.onopen = function () {
-  console.log("WebSocket Client Connected");
+  console.log("Le client est connecté au serveur WebSocket");
 
   // Connexion du joueur
 };

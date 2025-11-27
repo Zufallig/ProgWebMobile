@@ -45,15 +45,12 @@ function createLobby() {
 }
 
 async function renderLobbies(data) {
-  console.log("Entrée dans renderLobbies");
   let gamesArray = await getGamesData(data);
 
   if (!gamesArray) return;
 
   const list = document.getElementById("lobbyList");
   list.innerHTML = "";
-
-  console.log("GAMESARRAY : " + gamesArray);
 
   if (gamesArray.length === 0) {
     list.innerHTML = "<p>Aucun lobby créé pour le moment.</p>";
@@ -73,7 +70,6 @@ async function renderLobbies(data) {
 }
 
 function joinGame(gameId) {
-  console.log("Tentative de rejoindre la partie :", gameId);
   const color = document.getElementById("colorPicker").value; // M : pareil ajout couleur
 
   ws.send(
@@ -99,7 +95,6 @@ async function getGamesData(data) {
   if (data === undefined) {
     return null;
   }
-  console.log("Lobbies: " + data.lobbies);
   return data.lobbies;
 }
 
