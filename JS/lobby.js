@@ -11,7 +11,6 @@ function goToLobby() {
   ws.send(
     JSON.stringify({
       type: "getAllLobbies",
-      playerId: id,
     })
   );
   showScreen("lobbyScreen");
