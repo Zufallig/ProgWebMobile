@@ -14,12 +14,12 @@ document.addEventListener("keydown", (e) => {
     return;
   }
 
-  if (gameId !== "" && id !== "") {
+  if (gameId !== "") {
     // On n'écoute les mouvements que lorsque le joueur est dans une partie
     ws.send(
       JSON.stringify({
         type: "playerMovement",
-        playerId: id,
+        username: username,
         gameId: gameId,
         direction: dir,
       })
@@ -28,12 +28,12 @@ document.addEventListener("keydown", (e) => {
 });
 
 function setDirection(dir) {
-  if (gameId !== "" && id !== "") {
+  if (gameId !== "") {
     // On n'écoute les mouvements que lorsque le joueur est dans une partie
     ws.send(
       JSON.stringify({
         type: "playerMovement",
-        playerId: id,
+        username: username,
         gameId: gameId,
         direction: dir,
       })

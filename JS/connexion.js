@@ -1,5 +1,4 @@
 let username = "";
-let id = "";
 
 //Fonction permettant le login ou la création d'un utilisateur
 function validateLogin() {
@@ -29,7 +28,6 @@ function validateLogin() {
 
 async function checkValid(data) {
   if (data.valid) {
-    id = data.playerId;
     showScreen("homeScreen");
   } else {
     // Message d'erreur

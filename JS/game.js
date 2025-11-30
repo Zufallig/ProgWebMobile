@@ -14,8 +14,9 @@ function restartGame() {
   ws.send(
     JSON.stringify({
       type: "restartGame",
-      playerId: id,
+      username: username,
       gameId: gameId,
+      color: trailColor,
     })
   );
 }
@@ -24,7 +25,7 @@ function showJoinRestartedGame(data) {
   let restartBtn = document.getElementById("restartBtn");
   restartBtn.textContent = "Rejoindre";
   document.getElementById("gameEndText").textContent =
-    data.playerName + " veut rejouer !";
+    data.restartName + " veut rejouer !";
   // On change l'action réalisée par le bouton, pour ne pas recréer une autre partie en
   // plus de la nouvelle créée par un autre joueur
   restartBtn.onclick = () => {
@@ -37,7 +38,7 @@ function joinRestartedGame(gameIdToJoin) {
   ws.send(
     JSON.stringify({
       type: "joinGame",
-      playerId: id,
+      username: username,
       gameId: gameIdToJoin,
       color: trailColor,
     })
@@ -67,7 +68,7 @@ function setReady() {
   ws.send(
     JSON.stringify({
       type: "playerReady",
-      playerId: id,
+      username: username,
       gameId: gameId,
       ready: true,
     })
@@ -82,14 +83,14 @@ function updatePlayers(players) {
   svgCanvas.innerHTML = "";
 
   players.forEach((player) => {
-    if (!playersState[player.id]) {
-      playersState[player.id] = {
+    if (!playersState[player.username]) {
+      playersState[player.username] = {
         trail: [],
         color: player.color || trailColor, // M : couleur du joueur ou couleur par défaut
       };
     }
 
-    const state = playersState[player.id];
+    const state = playersState[player.username];
     // M : mise à jour de la couleur
     state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
 

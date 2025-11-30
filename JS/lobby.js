@@ -32,7 +32,7 @@ function createLobby() {
     JSON.stringify({
       type: "createGame",
       maxPlayers: maxPlayers,
-      creatorId: id,
+      creatorName: username,
       gameName: name,
       color: color, // M : envoi couleur
     })
@@ -74,7 +74,7 @@ function joinGame(gameId) {
   ws.send(
     JSON.stringify({
       type: "joinGame",
-      playerId: id,
+      username: username,
       gameId: gameId,
       color: color, // M : envoi de la couleur choisie
     })
@@ -82,10 +82,9 @@ function joinGame(gameId) {
 }
 
 async function getGameId(data) {
-  if (data.valid && data.creatorId === id) {
+  if (data.valid && data.creatorName === username) {
     gameId = data.gameId;
   } else {
-    showErrorScreen(data.reason);
     return -1;
   }
 }

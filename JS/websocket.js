@@ -1,6 +1,6 @@
 const ws = new WebSocket("ws://localhost:9898/");
 ws.onopen = function () {
-  console.log("Le client est connecté au serveur WebSocket");
+  console.log("Connecté au serveur WebSocket !");
 
   // Connexion du joueur
 };
@@ -20,15 +20,11 @@ ws.onmessage = function (message) {
       }
       break;
     case "createGameResponse":
-      // Si l'id du joueur actuel correspond à l'id du créateur de la game,
-      // on stocke l'id de la game
-      if (data.creatorId === id) {
-        getGameId(data);
-      }
+      getGameId(data);
+
       ws.send(
         JSON.stringify({
           type: "getAllLobbies",
-          playerId: id,
         })
       );
 
@@ -37,7 +33,6 @@ ws.onmessage = function (message) {
       ws.send(
         JSON.stringify({
           type: "getAllLobbies",
-          playerId: id,
         })
       );
     case "getAllLobbiesResponse":
@@ -91,7 +86,7 @@ ws.onmessage = function (message) {
       }
       break;
     case "endGame":
-      if (data.winnerId === id) {
+      if (data.winnerName === username) {
         gameEnded("Vous avez gagné ! ");
       } else {
         gameEnded("Vous avez perdu...");

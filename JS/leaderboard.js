@@ -9,7 +9,6 @@ function goToLeaderboard() {
 
 function renderLeaderboard(playersData) {
   let playersArray = playersData;
-  console.log(playersArray);
   if (!playersArray) {
     return;
   }
