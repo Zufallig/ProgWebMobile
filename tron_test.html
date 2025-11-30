@@ -6,35 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tron</title>
 
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Tron</title>
+    <!-- Police stylisée pour effet futuriste -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="./tron.css" rel="stylesheet">
 
-      <!-- Police stylisée pour effet futuriste -->
-      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-      <link href="./tron.css" rel="stylesheet">
-      <!-- Police stylisée pour effet futuriste -->
-      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-      <link href="./tron.css" rel="stylesheet">
-
-      <script src="./JS/connexion.js"></script>
-      <script src="./JS/controle.js"></script>
-      <script src="./JS/lobby.js"></script>
-      <script src="./JS/game.js"></script>
-      <script src="./JS/websocket.js"></script>
-      <script src="./JS/leaderboard.js"></script>
-    </head>
+    <script src="./JS/connexion.js"></script>
+    <script src="./JS/controle.js"></script>
+    <script src="./JS/lobby.js"></script>
+    <script src="./JS/game.js"></script>
+    <script src="./JS/websocket.js"></script>
+    <script src="./JS/leaderboard.js"></script>
+  </head>
 
   <body>
 
-    <!-- Écran de connexion -->
-    <section id="loginScreen" class="screen" style="display: flex;">
-      <h1>Connexion</h1>
-      <input id="loginInput" placeholder="Login">
-      <input id="passwordInput" type="password" placeholder="Mot de passe">
-      <button onclick="validateLogin()">Continuer</button>
-    </section>
     <!-- Écran de connexion -->
     <section id="loginScreen" class="screen" style="display: flex;">
       <h1>Connexion</h1>
@@ -64,26 +49,13 @@
       <h2>Lobby</h2>
       <p id="connectedUser" style="font-size: 0.9rem; opacity: 0.8;"></p>
       <button onclick="toggleLobbyForm()">Créer un lobby</button>
-      <!-- Lobby -->
-      <section id="lobbyScreen" class="screen">
-        <h2>Lobby</h2>
-        <p id="connectedUser" style="font-size: 0.9rem; opacity: 0.8;"></p>
-        <button onclick="toggleLobbyForm()">Créer un lobby</button>
 
-        <div id="createLobbyForm">
-          <input id="lobbyNameInput" placeholder="Nom du lobby">
-          <input id="maxPlayersInput" type="number" min="2" max="4" value="2">
-          <button onclick="createLobby()">Créer</button>
-        </div>
-        <div id="createLobbyForm">
-          <input id="lobbyNameInput" placeholder="Nom du lobby">
-          <input id="maxPlayersInput" type="number" min="2" max="4" value="2">
-          <button onclick="createLobby()">Créer</button>
-        </div>
+      <div id="createLobbyForm">
+        <input id="lobbyNameInput" placeholder="Nom du lobby">
+        <input id="maxPlayersInput" type="number" min="2" max="4" value="2">
+        <button onclick="createLobby()">Créer</button>
+      </div>
 
-        <div id="lobbyList"></div>
-        <button onclick="goToHome()">Accueil</button>
-      </section>
       <div id="lobbyList"></div>
       <button onclick="goToHome()">Accueil</button>
     </section>
@@ -98,15 +70,6 @@
       <svg id="svgCanvas" xmlns="http://www.w3.org/2000/svg" width="300" height="300"></svg>
     </section>
 
-    <!-- Contrôles tactiles -->
-    <section id="globalMobileControls">
-      <div><button class="controlBtn" onclick="setDirection('up')">↑</button></div>
-      <div class="middleRow">
-        <button class="controlBtn" onclick="setDirection('left')">←</button>
-        <button class="controlBtn" onclick="setDirection('down')">↓</button>
-        <button class="controlBtn" onclick="setDirection('right')">→</button>
-      </div>
-    </section>
     <!-- Contrôles tactiles -->
     <section id="globalMobileControls">
       <div><button class="controlBtn" onclick="setDirection('up')">↑</button></div>
