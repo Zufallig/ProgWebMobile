@@ -33,7 +33,6 @@ function showJoinRestartedGame(data) {
 }
 
 function joinRestartedGame(gameIdToJoin) {
-  document.getElementById("gameEndedScreen").style.display = "none";
   // On tente de rejoindre la partie
   ws.send(
     JSON.stringify({
