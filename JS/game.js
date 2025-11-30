@@ -16,6 +16,7 @@ function restartGame() {
       type: "restartGame",
       playerId: id,
       gameId: gameId,
+      color: trailColor, // M : envoi de la couleur choisie
     })
   );
 }
