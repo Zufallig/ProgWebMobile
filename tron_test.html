@@ -15,6 +15,7 @@
     <script src="./JS/lobby.js"></script>
     <script src="./JS/game.js"></script>
     <script src="./JS/websocket.js"></script>
+    <script src="./JS/leaderboard.js"></script>
   </head>
 
   <body>
@@ -33,6 +34,15 @@
       <label>Couleur de la traînée :</label>
       <input type="color" id="colorPicker" value="#00ffff">
       <button onclick="goToLobby()">Jouer</button>
+      <button onclick="goToLeaderboard()">Classement</button>
+    </section>
+
+    <!-- Classement -->
+    <section id="leaderboardScreen" class="screen">
+      <h2>Classement</h2>
+      <div id="playerList"></div>
+      <button onclick="goToLobby()">Jouer</button>
+      <button onclick="goToHome()">Accueil</button>
     </section>
 
     <!-- Lobby -->

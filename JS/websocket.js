@@ -12,6 +12,13 @@ ws.onmessage = function (message) {
     case "connectionResponse":
       checkValid(data);
       break;
+    case "getLeaderboardResponse":
+      if (data.valid) {
+        renderLeaderboard(data.players);
+      } else {
+        showErrorScreen(data.reason);
+      }
+      break;
     case "createGameResponse":
       // Si l'id du joueur actuel correspond à l'id du créateur de la game,
       // on stocke l'id de la game

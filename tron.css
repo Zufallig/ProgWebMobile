@@ -34,6 +34,10 @@ h2 {
   margin-bottom: 10px;
 }
 
+.playerName {
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
 #lobbyList {
   display: flex;
   flex-direction: column;
