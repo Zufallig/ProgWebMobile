@@ -1,3 +1,27 @@
+let lastSentDirection = null;
+
+function sendMovement(dir) {
+  if (!dir || gameId === "") {
+    return;
+  }
+
+  // Ignorer si la direction demandée est identique à la précédente
+  if (dir === lastSentDirection) {
+    return;
+  }
+
+  lastSentDirection = dir;
+
+  ws.send(
+    JSON.stringify({
+      type: "playerMovement",
+      username: username,
+      gameId: gameId,
+      direction: dir,
+    })
+  );
+}
+
 //Fonction de controle
 document.addEventListener("keydown", (e) => {
   const movements = {
@@ -14,29 +38,9 @@ document.addEventListener("keydown", (e) => {
     return;
   }
 
-  if (gameId !== "") {
-    // On n'écoute les mouvements que lorsque le joueur est dans une partie
-    ws.send(
-      JSON.stringify({
-        type: "playerMovement",
-        username: username,
-        gameId: gameId,
-        direction: dir,
-      })
-    );
-  }
+  sendMovement(dir);
 });
 
 function setDirection(dir) {
-  if (gameId !== "") {
-    // On n'écoute les mouvements que lorsque le joueur est dans une partie
-    ws.send(
-      JSON.stringify({
-        type: "playerMovement",
-        username: username,
-        gameId: gameId,
-        direction: dir,
-      })
-    );
-  }
+  sendMovement(dir);
 }

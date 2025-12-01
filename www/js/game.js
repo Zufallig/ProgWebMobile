@@ -7,6 +7,7 @@ let gameStarted = false;
 const squareSize = 3;
 let playersState = {};
 let trailColor = "#00ffff";
+let readySent = false;
 
 function restartGame() {
   document.getElementById("gameEndedScreen").style.display = "none";
@@ -49,6 +50,10 @@ function startGame() {
   gameStarted = true;
   svgCanvas = document.getElementById("svgCanvas");
 
+  if (typeof lastSentDirection !== "undefined") {
+    lastSentDirection = null;
+  }
+
   trailColor = document.getElementById("colorPicker").value;
   svgCanvas.innerHTML = "";
   // Reset de l'état des joueurs
@@ -65,6 +70,12 @@ function startGame() {
 }
 
 function setReady() {
+  if (readySent || !gameId) {
+    return;
+  }
+
+  readySent = true;
+
   ws.send(
     JSON.stringify({
       type: "playerReady",
@@ -134,6 +145,7 @@ function gameEnded(message) {
   readyButton.textContent = "Prêt ? ";
   readyButton.style.backgroundColor = "#111";
   readyButton.style.color = "#fff";
+  readySent = false;
 }
 
 /* -----------------------------
