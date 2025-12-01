@@ -164,6 +164,17 @@ function trailColorToRGBA(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+function leaveGameAndGoToHome() {
+  ws.send(
+    JSON.stringify({
+      type: "leaveLobby",
+      username: username,
+      gameId: gameId,
+    })
+  );
+  goToHome();
+}
+
 function goToHome() {
   document.getElementById("gameEndedScreen").style.display = "none";
   showScreen("homeScreen");

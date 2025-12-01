@@ -98,6 +98,11 @@ ws.onmessage = function (message) {
       } else {
         showErrorScreen(data.reason);
       }
+      break;
+    case "leaveLobbyResponse":
+      if (!data.valid) {
+        showErrorScreen(data.reason);
+      }
   }
 };
 
