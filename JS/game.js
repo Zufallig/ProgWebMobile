@@ -48,6 +48,11 @@ function joinRestartedGame(gameIdToJoin) {
 function startGame() {
   gameStarted = true;
   svgCanvas = document.getElementById("svgCanvas");
+  
+  // Reset de la dernière direction envoyée
+  if (typeof lastSentDirection !== "undefined") {
+    lastSentDirection = null;
+  }
 
   trailColor = document.getElementById("colorPicker").value;
   svgCanvas.innerHTML = "";
