@@ -1,16 +1,28 @@
 let lastSentDirection = null;
+let currentDirection = null;
+
+function isOppositeDirection(newDir, currentDir) {
+  if (!newDir || !currentDir) return false;
+    return (
+      (currentDir === "up" && newDir === "down") ||
+      (currentDir === "down" && newDir === "up") ||
+      (currentDir === "left" && newDir === "right") ||
+      (currentDir === "right" && newDir === "left")
+    );
+  }
 
 function sendMovement(dir) {
   if (!dir || gameId === "") {
     return;
   }
 
-  // Ignorer si la direction demandée est identique à la précédente
-  if (dir === lastSentDirection) {
+   // Ignorer si la direction demandée est l'opposé de la direction actuelle
+  if (dir === lastSentDirection || isOppositeDirection(dir, currentDirection)) {
     return;
   }
 
   lastSentDirection = dir;
+  currentDirection = dir;
 
   ws.send(
     JSON.stringify({

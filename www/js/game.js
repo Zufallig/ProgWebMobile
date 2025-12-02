@@ -46,13 +46,18 @@ function joinRestartedGame(gameIdToJoin) {
   );
 }
 
+// Réinitialise les contrôles 
+function resetControls() {
+  lastSentDirection = null;
+  currentDirection = null;
+}
+
 function startGame() {
   gameStarted = true;
   svgCanvas = document.getElementById("svgCanvas");
 
-  if (typeof lastSentDirection !== "undefined") {
-    lastSentDirection = null;
-  }
+  // Réinitialisation des contrôles
+  resetControls();
 
   trailColor = document.getElementById("colorPicker").value;
   svgCanvas.innerHTML = "";
@@ -104,6 +109,10 @@ function updatePlayers(players) {
     const state = playersState[player.username];
     // M : mise à jour de la couleur
     state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
+
+    if(player.username === username && player.currentDirection) {
+      currentDirection = player.currentDirection;
+    }
 
     // si joueur mort, on continue d'afficher son trail
     if (!player.alive) {
