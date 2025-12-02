@@ -1,18 +1,29 @@
 let lastSentDirection = null;
+let currentDirection = null;
 
-//Envoi des mouvements au serveur
-function sendMovement(direction) {
+function isOppositeDirection(newDir, currentDir) {
+  if (!newDir || !currentDir) return false;
+    return (
+      (currentDir === "up" && newDir === "down") ||
+      (currentDir === "down" && newDir === "up") ||
+      (currentDir === "left" && newDir === "right") ||
+      (currentDir === "right" && newDir === "left")
+    );
+  }
+
+function sendMovement(dir) {
   if (!dir || gameId === "") {
     return;
   }
 
-  //ignorer les mouvements identiques au dernier envoyé
-  if (dir === lastSentDirection) {
+   // Ignorer si la direction demandée est l'opposé de la direction actuelle
+  if (dir === lastSentDirection || isOppositeDirection(dir, currentDirection)) {
     return;
   }
 
   lastSentDirection = dir;
-  // On n'écoute les mouvements que lorsque le joueur est dans une partie
+  currentDirection = dir;
+
   ws.send(
     JSON.stringify({
       type: "playerMovement",
