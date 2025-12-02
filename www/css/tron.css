@@ -105,7 +105,7 @@ button:hover {
   color: black;
 }
 
-/* --- SCORE ET AFFICHAGE EN JEU --- */
+/* --- AFFICHAGE EN JEU --- */
 #hud {
   display: flex;
   justify-content: center;

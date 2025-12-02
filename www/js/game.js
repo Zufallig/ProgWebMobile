@@ -46,7 +46,7 @@ function joinRestartedGame(gameIdToJoin) {
   );
 }
 
-// Réinitialise les contrôles 
+// Réinitialise les contrôles
 function resetControls() {
   lastSentDirection = null;
   currentDirection = null;
@@ -64,7 +64,6 @@ function startGame() {
   // Reset de l'état des joueurs
   playersState = {};
 
-  // document.getElementById("scoreDisplay").textContent = "Score: 0";
   document.getElementById("globalMobileControls").style.display = "flex";
 
   // Reset texte fin partie et fonction restart game
@@ -110,7 +109,7 @@ function updatePlayers(players) {
     // M : mise à jour de la couleur
     state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
 
-    if(player.username === username && player.currentDirection) {
+    if (player.username === username && player.currentDirection) {
       currentDirection = player.currentDirection;
     }
 
