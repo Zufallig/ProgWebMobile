@@ -16,7 +16,7 @@ ws.onmessage = function (message) {
       if (data.valid) {
         renderLeaderboard(data.players);
       } else {
-        showErrorScreen(data.reason);
+        showMessageScreen("Erreur", data.reason);
       }
       break;
     case "createGameResponse":
@@ -48,7 +48,7 @@ ws.onmessage = function (message) {
         // Aller sur la scène de jeu
         showScreen("gameScreen");
       } else {
-        showErrorScreen("Impossible de rejoindre : " + data.reason);
+        showMessageScreen("Erreur", "Impossible de rejoindre : " + data.reason);
       }
       break;
 
@@ -61,7 +61,7 @@ ws.onmessage = function (message) {
         readyButton.style.color = "#111";
       } else {
         // Afficher une erreur
-        showErrorScreen(data.reason);
+        showMessageScreen("Erreur", data.reason);
       }
       break;
     case "countdown":
@@ -96,13 +96,18 @@ ws.onmessage = function (message) {
       if (data.valid) {
         showJoinRestartedGame(data);
       } else {
-        showErrorScreen(data.reason);
+        showMessageScreen("Erreur", data.reason);
       }
       break;
     case "leaveLobbyResponse":
       if (!data.valid) {
-        showErrorScreen(data.reason);
+        showMessageScreen("Erreur", data.reason);
       }
+      break;
+    case "kickPlayer":
+      showMessageScreen("Temps écoulé", "Vous avez été expulsé de la partie");
+      showScreen("lobbyScreen");
+      break;
   }
 };
 

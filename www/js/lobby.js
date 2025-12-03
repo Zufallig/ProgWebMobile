@@ -26,7 +26,8 @@ function createLobby() {
   const maxPlayers = document.getElementById("maxPlayersInput").value;
   const color = document.getElementById("colorPicker").value; // M : ajout couleur
 
-  if (!name) return showErrorScreen("Veuillez entrer un nom de lobby !");
+  if (!name)
+    return showMessageScreen("Erreur", "Veuillez entrer un nom de lobby !");
 
   ws.send(
     JSON.stringify({

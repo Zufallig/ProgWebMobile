@@ -188,12 +188,14 @@ function goToHome() {
   showScreen("homeScreen");
 }
 
-function closeErrorScreen() {
-  document.getElementById("errorScreen").style.display = "none";
+function closeMessageScreen() {
+  document.getElementById("messageScreen").style.display = "none";
 }
 
-function showErrorScreen(message) {
-  document.getElementById("errorScreen").style.display = "block";
-  document.getElementById("errorText").textContent =
+// Fonction pour afficher un message dans un modal (par défaut, une erreur)
+function showMessageScreen(title, message) {
+  document.getElementById("messageScreen").style.display = "block";
+  document.getElementById("messageTitle").textContent = title || "Erreur";
+  document.getElementById("messageText").textContent =
     message || "Une erreur est survenue";
 }
