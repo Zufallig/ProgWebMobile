@@ -40,6 +40,7 @@ function onDeviceReady() {
             type: "getAllLobbies",
           })
         );
+        break;
       case "getAllLobbiesResponse":
         renderLobbies(data);
         break;
