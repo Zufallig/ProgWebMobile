@@ -5,14 +5,14 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
   ws = new WebSocket("ws://localhost:9898/");
   ws.onopen = function () {
-    ("Connecté au serveur WebSocket !");
+    console.log("Connecté au serveur WebSocket !");
 
     // Connexion du joueur
   };
   ws.onmessage = function (message) {
     let data = JSON.parse(message.data);
 
-    // ("Received: '" + message.data + "'");
+    "Received: '" + message.data + "'";
     switch (data.type) {
       case "connectionResponse":
         checkValid(data);
