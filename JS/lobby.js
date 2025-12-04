@@ -43,29 +43,69 @@ function createLobby() {
   showScreen("gameScreen");
 }
 
-async function renderLobbies(data) {
-  let gamesArray = await getGamesData(data);
+let allLobbies = [];
+let page = 1;
+const perPage = 2;
 
-  if (!gamesArray) return;
+function renderLobbies(data) {
+  if (data) allLobbies = data.lobbies || [];
 
+  const search = document.getElementById("lobbySearchInput")?.value.toLowerCase() || "";
   const list = document.getElementById("lobbyList");
-  list.innerHTML = "";
+  const pag = document.getElementById("paginationControls");
 
-  if (gamesArray.length === 0) {
-    list.innerHTML = "<p>Aucun lobby créé pour le moment.</p>";
+  list.innerHTML = "";
+  pag.innerHTML = "";
+
+  // --- filtrage simple par nom ---
+  const filtered = allLobbies.filter(l =>
+    l.gameName.toLowerCase().includes(search)
+  );
+
+  if (filtered.length === 0) {
+    list.innerHTML = "<p>Aucun lobby trouvé.</p>";
     return;
   }
 
-  gamesArray.forEach((lobby) => {
-    const div = document.createElement("div");
-    div.className = "lobbyItem";
-    div.innerHTML = `
+  // --- pagination simple ---
+  const totalPages = Math.ceil(filtered.length / perPage);
+  if (page > totalPages) page = totalPages;
+  if (page < 1) page = 1;
+
+  const start = (page - 1) * perPage;
+  const lobbiesToShow = filtered.slice(start, start + perPage);
+
+  // --- affichage des lobbys ---
+  lobbiesToShow.forEach(lobby => {
+    list.innerHTML += `
+      <div class="lobbyItem">
         <strong>${lobby.gameName}</strong><br>
-        Joueurs: ${lobby.currentPlayers}/${lobby.maxPlayers}<br>
-        <button onclick="joinGame('${lobby.gameId}')">Rejoindre le lobby</button>
+        Joueurs : ${lobby.currentPlayers}/${lobby.maxPlayers}<br>
+        <button onclick="joinLobby('${lobby.gameId}')">Rejoindre</button>
+      </div>
     `;
-    list.appendChild(div);
   });
+
+  // --- boutons Précédent / Suivant ---
+  if (totalPages > 1) {
+    pag.innerHTML = `
+      <button onclick="changePage(-1)" ${page === 1 ? "disabled" : ""}>←</button>
+      <span>Page ${page}/${totalPages}</span>
+      <button onclick="changePage(1)" ${page === totalPages ? "disabled" : ""}>→</button>
+    `;
+  }
+}
+
+// change de page (précédent / suivant)
+function changePage(dir) {
+  page += dir;
+  renderLobbies();
+}
+
+// réinitialise la page quand on tape dans la recherche
+function filterLobbies() {
+  page = 1;
+  renderLobbies();
 }
 
 function joinGame(gameId) {

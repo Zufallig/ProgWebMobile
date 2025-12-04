@@ -7,7 +7,6 @@ let gameStarted = false;
 const squareSize = 3;
 let playersState = {};
 let trailColor = "#00ffff";
-let readySent = false;
 
 function restartGame() {
   document.getElementById("gameEndedScreen").style.display = "none";
@@ -46,18 +45,9 @@ function joinRestartedGame(gameIdToJoin) {
   );
 }
 
-// Réinitialise les contrôles 
-function resetControls() {
-  lastSentDirection = null;
-  currentDirection = null;
-}
-
 function startGame() {
   gameStarted = true;
   svgCanvas = document.getElementById("svgCanvas");
-
-  // Réinitialisation des contrôles
-  resetControls();
 
   trailColor = document.getElementById("colorPicker").value;
   svgCanvas.innerHTML = "";
@@ -75,12 +65,6 @@ function startGame() {
 }
 
 function setReady() {
-  if (readySent || !gameId) {
-    return;
-  }
-
-  readySent = true;
-
   ws.send(
     JSON.stringify({
       type: "playerReady",
@@ -109,10 +93,6 @@ function updatePlayers(players) {
     const state = playersState[player.username];
     // M : mise à jour de la couleur
     state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
-
-    if(player.username === username && player.currentDirection) {
-      currentDirection = player.currentDirection;
-    }
 
     // si joueur mort, on continue d'afficher son trail
     if (!player.alive) {
@@ -154,7 +134,6 @@ function gameEnded(message) {
   readyButton.textContent = "Prêt ? ";
   readyButton.style.backgroundColor = "#111";
   readyButton.style.color = "#fff";
-  readySent = false;
 }
 
 /* -----------------------------
@@ -171,17 +150,6 @@ function trailColorToRGBA(hex, alpha) {
     g = parseInt(hex.slice(3, 5), 16),
     b = parseInt(hex.slice(5, 7), 16);
   return `rgba(${r},${g},${b},${alpha})`;
-}
-
-function leaveGameAndGoToHome() {
-  ws.send(
-    JSON.stringify({
-      type: "leaveLobby",
-      username: username,
-      gameId: gameId,
-    })
-  );
-  goToHome();
 }
 
 function goToHome() {
