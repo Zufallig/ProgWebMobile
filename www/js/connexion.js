@@ -1,19 +1,20 @@
-let username = "";
+import init from "./init.js";
 
-//Fonction permettant le login ou la création d'un utilisateur
+// Mise en place des fonctions sur les boutons
+document.getElementById("loginBtn").onclick = validateLogin;
+
+// Fonction permettant la connexion ou la création d'un utilisateur
 function validateLogin() {
   const user = document.getElementById("loginInput").value.trim();
   const pass = document.getElementById("passwordInput").value.trim();
   if (user && pass) {
-    username = user;
+    init.username = user;
 
-    ws.send(
-      JSON.stringify({
-        type: "connectionPlayer",
-        username: user,
-        password: pass,
-      })
-    );
+    init.sendServer({
+      type: "connectionPlayer",
+      username: user,
+      password: pass,
+    });
 
     document.getElementById("usernameDisplay").textContent = user;
     document.getElementById(
@@ -22,11 +23,13 @@ function validateLogin() {
   }
 }
 
-async function checkValid(data) {
+async function handleConnectionResponse(data) {
   if (data.valid) {
-    showScreen("homeScreen");
+    init.showScreen("homeScreen");
   } else {
     // Message d'erreur
-    showMessageScreen("Erreur", "Mot de passe invalide");
+    init.showMessageScreen("Erreur", "Mot de passe invalide");
   }
 }
+
+export default { handleConnectionResponse };

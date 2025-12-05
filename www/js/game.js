@@ -1,3 +1,7 @@
+import init from "./init.js";
+import ControlHandler from "./controle.js";
+// import LobbyHandler from "./lobby.js";
+
 /* -----------------------------
        DÉMARRER / REJOUER LE JEU
     ----------------------------- */
@@ -7,19 +11,64 @@ let gameStarted = false;
 const squareSize = 3;
 let playersState = {};
 let trailColor = "#00ffff";
-let readySent = false;
+
+document.getElementById("gameEndHomeBtn").onclick = init.leaveGameAndGoToHome;
+document.getElementById("restartBtn").onclick = restartGame;
+
+function handleJoinGameResponse(data) {
+  if (data.valid) {
+    // Enregistrer l'ID de la partie
+    init.gameId = data.gameId;
+
+    // Aller sur la scène de jeu
+    init.showScreen("gameScreen");
+  } else {
+    init.showMessageScreen(
+      "Erreur",
+      "Impossible de rejoindre : " + data.reason
+    );
+  }
+}
+
+function handleUpdateAllPlayerMovements(data) {
+  if (gameStarted) {
+    updatePlayers(data.players);
+  }
+}
+
+function handleEndGame(data) {
+  if (data.winnerName === init.username) {
+    gameEnded("Vous avez gagné ! ");
+  } else {
+    gameEnded("Vous avez perdu...");
+  }
+}
+
+function handleRestartGameResponse(data) {
+  if (data.valid) {
+    showJoinRestartedGame(data);
+  } else {
+    init.showMessageScreen("Erreur", data.reason);
+  }
+}
+
+function handleCreateGameResponse(data) {
+  init.getGameId(data);
+
+  init.sendServer({
+    type: "getAllLobbies",
+  });
+}
 
 function restartGame() {
   document.getElementById("gameEndedScreen").style.display = "none";
   // Envoi au serveur que l'on souhaite rejouer
-  ws.send(
-    JSON.stringify({
-      type: "restartGame",
-      username: username,
-      gameId: gameId,
-      color: trailColor, // M : envoi de la couleur choisie
-    })
-  );
+  init.sendServer({
+    type: "restartGame",
+    username: init.username,
+    gameId: init.gameId,
+    color: trailColor, // M : envoi de la couleur choisie
+  });
 }
 
 function showJoinRestartedGame(data) {
@@ -29,17 +78,9 @@ function showJoinRestartedGame(data) {
     data.restartName + " veut rejouer !";
   // On change l'action réalisée par le bouton, pour ne pas recréer une autre partie en
   // plus de la nouvelle créée par un autre joueur
-  restartBtn.onclick = () => {
-    joinGame(data.gameId);
-  };
-}
-
-f;
-
-// Réinitialise les contrôles
-function resetControls() {
-  lastSentDirection = null;
-  currentDirection = null;
+  restartBtn.onclick = null;
+  restartBtn.classList.add("joinGameBtn");
+  restartBtn.dataset.id = data.gameId;
 }
 
 function startGame() {
@@ -47,7 +88,7 @@ function startGame() {
   svgCanvas = document.getElementById("svgCanvas");
 
   // Réinitialisation des contrôles
-  resetControls();
+  ControlHandler.resetControls();
 
   trailColor = document.getElementById("colorPicker").value;
   svgCanvas.innerHTML = "";
@@ -61,23 +102,8 @@ function startGame() {
   let restartBtn = document.getElementById("restartBtn");
   restartBtn.textContent = "Rejouer";
   restartBtn.onclick = restartGame;
-}
-
-function setReady() {
-  if (readySent || !gameId) {
-    return;
-  }
-
-  readySent = true;
-
-  ws.send(
-    JSON.stringify({
-      type: "playerReady",
-      username: username,
-      gameId: gameId,
-      ready: true,
-    })
-  );
+  restartBtn.classList.remove("joinGameBtn");
+  restartBtn.removeAttribute("data-id");
 }
 
 /* -----------------------------
@@ -99,8 +125,8 @@ function updatePlayers(players) {
     // M : mise à jour de la couleur
     state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
 
-    if (player.username === username && player.currentDirection) {
-      currentDirection = player.currentDirection;
+    if (player.username === init.username && player.currentDirection) {
+      ControlHandler.currentDirection = player.currentDirection;
     }
 
     // si joueur mort, on continue d'afficher son trail
@@ -143,10 +169,10 @@ function gameEnded(message) {
   readyButton.textContent = "Prêt ? ";
   readyButton.style.backgroundColor = "#111";
   readyButton.style.color = "#fff";
-  readySent = false;
+  init.readySent = false;
 
   // On remet le bouton Quitter pour la prochaine partie
-  document.getElementById("quit").style.display = "block";
+  document.getElementById("quitBtn").style.display = "block";
 }
 
 /* -----------------------------
@@ -165,30 +191,11 @@ function trailColorToRGBA(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function leaveGameAndGoToHome() {
-  ws.send(
-    JSON.stringify({
-      type: "leaveLobby",
-      username: username,
-      gameId: gameId,
-    })
-  );
-  goToHome();
-}
-
-function goToHome() {
-  document.getElementById("gameEndedScreen").style.display = "none";
-  showScreen("homeScreen");
-}
-
-function closeMessageScreen() {
-  document.getElementById("messageScreen").style.display = "none";
-}
-
-// Fonction pour afficher un message dans un modal (par défaut, une erreur)
-function showMessageScreen(title, message) {
-  document.getElementById("messageScreen").style.display = "block";
-  document.getElementById("messageTitle").textContent = title || "Erreur";
-  document.getElementById("messageText").textContent =
-    message || "Une erreur est survenue";
-}
+export default {
+  handleCreateGameResponse,
+  handleJoinGameResponse,
+  handleUpdateAllPlayerMovements,
+  handleEndGame,
+  handleRestartGameResponse,
+  startGame,
+};

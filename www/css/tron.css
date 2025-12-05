@@ -53,6 +53,10 @@ body {
   z-index: 10;
 }
 
+#loginScreen {
+  display: flex;
+}
+
 h1,
 h2 {
   text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff4dff;

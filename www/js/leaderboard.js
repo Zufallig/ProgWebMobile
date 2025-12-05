@@ -1,14 +1,22 @@
+import init from "./init.js";
+
+document.getElementById("leaderboardBtn").onclick = goToLeaderboard;
+document.getElementById("leaderboardHomeBtn").onclick = init.goToHome;
 function goToLeaderboard() {
-  ws.send(
-    JSON.stringify({
-      type: "getLeaderboard",
-    })
-  );
-  showScreen("leaderboardScreen");
+  // Le client clique sur le classement
+  init.sendServer({
+    type: "getLeaderboard",
+  });
+  init.showScreen("leaderboardScreen");
 }
 
-function renderLeaderboard(playersData) {
-  let playersArray = playersData;
+function handleGetLeaderboardResponse(data) {
+  if (!data.valid) {
+    init.showMessageScreen("Erreur", data.reason);
+    return;
+  }
+
+  let playersArray = data.players;
   if (!playersArray) {
     return;
   }
@@ -30,3 +38,5 @@ function renderLeaderboard(playersData) {
     list.appendChild(p);
   });
 }
+
+export default { handleGetLeaderboardResponse };
