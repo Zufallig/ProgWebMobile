@@ -11,8 +11,9 @@ xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <platform name="android">
-    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
-        <application android:usesCleartextTraffic="true" />
-    </edit-config>
+        <preference name="Scheme" value="http" />    
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
     </platform>
 </widget>
