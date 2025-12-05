@@ -19,10 +19,6 @@ function validateLogin() {
     document.getElementById(
       "connectedUser"
     ).textContent = `Connecté en tant que ${user}`;
-    //     if (isPasswordValid) {
-    //     }
-    //   } else {
-    //     showErrorScreen("Entrez un login et un mot de passe");
   }
 }
 
@@ -31,6 +27,6 @@ async function checkValid(data) {
     showScreen("homeScreen");
   } else {
     // Message d'erreur
-    showErrorScreen("Mot de passe invalide");
+    showMessageScreen("Erreur", "Mot de passe invalide");
   }
 }

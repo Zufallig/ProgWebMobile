@@ -47,7 +47,8 @@
         <h2>Lobby</h2>
         <p id="connectedUser" style="font-size: 0.9rem; opacity: 0.8;"></p>
         <button onclick="toggleLobbyForm()">Créer un lobby</button>
-
+        <input id="lobbySearchInput" placeholder="Rechercher un lobby..." oninput="filterLobbies()"
+          style="width: 230px; margin-top: 10px;" />
         <div id="createLobbyForm">
           <input id="lobbyNameInput" placeholder="Nom du lobby">
           <input id="maxPlayersInput" type="number" min="2" max="4" value="2">
@@ -55,6 +56,7 @@
         </div>
 
         <div id="lobbyList"></div>
+        <div id="paginationControls" style="margin-top:10px; display:flex; gap:10px; align-items:center;"></div>
         <button onclick="goToHome()">Accueil</button>
       </section>
 
@@ -62,10 +64,10 @@
       <!-- Écran de jeu -->
       <section id="gameScreen" class="screen" style="flex-direction: column;">
         <div id="hud">
-          <span id="scoreDisplay">Score: 0</span>
           <button id="readyBtn" onclick="setReady()">Prêt ?</button>
         </div>
         <svg id="svgCanvas" xmlns="http://www.w3.org/2000/svg" width="300" height="300"></svg>
+        <button id="quit" onclick="leaveGameAndGoToHome()">Quitter</button>
       </section>
 
       <!-- Contrôles tactiles -->
@@ -86,11 +88,11 @@
         <button onclick="leaveGameAndGoToHome()">Accueil</button>
       </section>
 
-      <!-- Écran d'erreur -->
-      <section id="errorScreen">
-        <h2>Erreur</h2>
-        <p id="errorText"></p>
-        <button onclick="closeErrorScreen()">OK</button>
+      <!-- Écran de message-->
+      <section id="messageScreen">
+        <h2 id="messageTitle"></h2>
+        <p id="messageText"></p>
+        <button onclick="closeMessageScreen()">OK</button>
       </section>
 
     </div>
@@ -99,8 +101,9 @@
     <script src="./js/controle.js"></script>
     <script src="./js/lobby.js"></script>
     <script src="./js/game.js"></script>
-    <script src="./js/websocket.js"></script>
     <script src="./js/leaderboard.js"></script>
+    <script src="./js/websocket.js"></script>
+
   </body>
 
 </html>

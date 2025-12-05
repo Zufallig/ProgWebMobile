@@ -30,36 +30,30 @@ function showJoinRestartedGame(data) {
   // On change l'action réalisée par le bouton, pour ne pas recréer une autre partie en
   // plus de la nouvelle créée par un autre joueur
   restartBtn.onclick = () => {
-    joinRestartedGame(data.gameId);
+    joinGame(data.gameId);
   };
 }
 
-function joinRestartedGame(gameIdToJoin) {
-  // On tente de rejoindre la partie
-  ws.send(
-    JSON.stringify({
-      type: "joinGame",
-      username: username,
-      gameId: gameIdToJoin,
-      color: trailColor,
-    })
-  );
+f;
+
+// Réinitialise les contrôles
+function resetControls() {
+  lastSentDirection = null;
+  currentDirection = null;
 }
 
 function startGame() {
   gameStarted = true;
   svgCanvas = document.getElementById("svgCanvas");
 
-  if (typeof lastSentDirection !== "undefined") {
-    lastSentDirection = null;
-  }
+  // Réinitialisation des contrôles
+  resetControls();
 
   trailColor = document.getElementById("colorPicker").value;
   svgCanvas.innerHTML = "";
   // Reset de l'état des joueurs
   playersState = {};
 
-  // document.getElementById("scoreDisplay").textContent = "Score: 0";
   document.getElementById("globalMobileControls").style.display = "flex";
 
   // Reset texte fin partie et fonction restart game
@@ -105,6 +99,10 @@ function updatePlayers(players) {
     // M : mise à jour de la couleur
     state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
 
+    if (player.username === username && player.currentDirection) {
+      currentDirection = player.currentDirection;
+    }
+
     // si joueur mort, on continue d'afficher son trail
     if (!player.alive) {
       return renderTrail(state);
@@ -146,6 +144,9 @@ function gameEnded(message) {
   readyButton.style.backgroundColor = "#111";
   readyButton.style.color = "#fff";
   readySent = false;
+
+  // On remet le bouton Quitter pour la prochaine partie
+  document.getElementById("quit").style.display = "block";
 }
 
 /* -----------------------------
@@ -180,12 +181,14 @@ function goToHome() {
   showScreen("homeScreen");
 }
 
-function closeErrorScreen() {
-  document.getElementById("errorScreen").style.display = "none";
+function closeMessageScreen() {
+  document.getElementById("messageScreen").style.display = "none";
 }
 
-function showErrorScreen(message) {
-  document.getElementById("errorScreen").style.display = "block";
-  document.getElementById("errorText").textContent =
+// Fonction pour afficher un message dans un modal (par défaut, une erreur)
+function showMessageScreen(title, message) {
+  document.getElementById("messageScreen").style.display = "block";
+  document.getElementById("messageTitle").textContent = title || "Erreur";
+  document.getElementById("messageText").textContent =
     message || "Une erreur est survenue";
 }
