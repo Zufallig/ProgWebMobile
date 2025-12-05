@@ -1,7 +1,7 @@
 import ConnectionHandler from "./connexion.js";
-import LobbyHandler from "./lobby.js";
-import GameHandler from "./game.js";
-import LeaderboardHandler from "./leaderboard.js";
+import LobbyHandler from "./LobbyHandler.js";
+import GameHandler from "./GameHandler.js";
+import LeaderboardHandler from "./LeaderboardHandler.js";
 import init from "./init.js";
 
 // On attend que Cordova soit prêt

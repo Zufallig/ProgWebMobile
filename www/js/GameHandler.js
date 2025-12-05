@@ -1,6 +1,5 @@
 import init from "./init.js";
-import ControlHandler from "./controle.js";
-// import LobbyHandler from "./lobby.js";
+import ControlHandler from "./ControlHandler.js";
 
 /* -----------------------------
        DÉMARRER / REJOUER LE JEU
@@ -12,8 +11,20 @@ const squareSize = 3;
 let playersState = {};
 let trailColor = "#00ffff";
 
-document.getElementById("gameEndHomeBtn").onclick = init.leaveGameAndGoToHome;
+// === Ajout des event listeners liés à la partie ===
+
+document.getElementById("gameEndHomeBtn").onclick = leaveGameAndGoToHome;
 document.getElementById("restartBtn").onclick = restartGame;
+
+// === Fonctions handlers de la partie ===
+
+function handleCreateGameResponse(data) {
+  init.gameId = data.gameId;
+
+  init.sendServer({
+    type: "getAllLobbies",
+  });
+}
 
 function handleJoinGameResponse(data) {
   if (data.valid) {
@@ -50,14 +61,6 @@ function handleRestartGameResponse(data) {
   } else {
     init.showMessageScreen("Erreur", data.reason);
   }
-}
-
-function handleCreateGameResponse(data) {
-  init.getGameId(data);
-
-  init.sendServer({
-    type: "getAllLobbies",
-  });
 }
 
 function restartGame() {
@@ -106,6 +109,15 @@ function startGame() {
   restartBtn.removeAttribute("data-id");
 }
 
+function leaveGameAndGoToHome() {
+  init.sendServer({
+    type: "leaveLobby",
+    username: init.username,
+    gameId: init.gameId,
+  });
+
+  init.goToHome();
+}
 /* -----------------------------
        MISE À JOUR DU JEU
     ----------------------------- */
@@ -142,23 +154,6 @@ function updatePlayers(players) {
   });
 }
 
-function renderTrail(playerState) {
-  const color = playerState.color;
-  playerState.trail.forEach((seg) => {
-    const rect = createSvgElement("rect", {
-      x: seg.x * squareSize,
-      y: seg.y * squareSize,
-      width: squareSize,
-      height: squareSize,
-      fill: color,
-    });
-    svgCanvas.appendChild(rect);
-  });
-}
-
-/* -----------------------------
-       FIN DE PARTIE
-    ----------------------------- */
 function gameEnded(message) {
   svgCanvas.innerHTML = "";
   document.getElementById("gameEndText").textContent =
@@ -175,9 +170,8 @@ function gameEnded(message) {
   document.getElementById("quitBtn").style.display = "block";
 }
 
-/* -----------------------------
-       OUTILS
-    ----------------------------- */
+// === Fonctions outils ===
+
 function createSvgElement(tag, attrs) {
   const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (let attr in attrs) el.setAttribute(attr, attrs[attr]);
@@ -191,11 +185,26 @@ function trailColorToRGBA(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+function renderTrail(playerState) {
+  const color = playerState.color;
+  playerState.trail.forEach((seg) => {
+    const rect = createSvgElement("rect", {
+      x: seg.x * squareSize,
+      y: seg.y * squareSize,
+      width: squareSize,
+      height: squareSize,
+      fill: color,
+    });
+    svgCanvas.appendChild(rect);
+  });
+}
+
 export default {
   handleCreateGameResponse,
   handleJoinGameResponse,
   handleUpdateAllPlayerMovements,
   handleEndGame,
   handleRestartGameResponse,
+  leaveGameAndGoToHome,
   startGame,
 };

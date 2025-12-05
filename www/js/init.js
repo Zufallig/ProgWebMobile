@@ -33,24 +33,6 @@ function goToHome() {
   showScreen("homeScreen");
 }
 
-function leaveGameAndGoToHome() {
-  sendServer({
-    type: "leaveLobby",
-    username: username,
-    gameId: gameId,
-  });
-
-  goToHome();
-}
-
-async function getGameId(data) {
-  if (data.valid && data.creatorName === username) {
-    gameId = data.gameId;
-  } else {
-    return -1;
-  }
-}
-
 export default {
   ws,
   gameId,
@@ -60,7 +42,5 @@ export default {
   showMessageScreen,
   closeMessageScreen,
   goToHome,
-  leaveGameAndGoToHome,
-  getGameId,
   readySent,
 };

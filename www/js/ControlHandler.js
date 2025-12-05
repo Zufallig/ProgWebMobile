@@ -3,6 +3,8 @@ import init from "./init.js";
 let lastSentDirection = null;
 let currentDirection = null;
 
+// === Ajout des event listeners liés aux contrôles ===
+
 document.getElementById("upBtn").onclick = () => setDirection("up");
 document.getElementById("downBtn").onclick = () => setDirection("down");
 document.getElementById("leftBtn").onclick = () => setDirection("left");
@@ -45,7 +47,7 @@ function sendMovement(dir) {
   });
 }
 
-//Fonction de controle
+// Fonction de contrôles
 document.addEventListener("keydown", (e) => {
   const movements = {
     ArrowUp: "up",
