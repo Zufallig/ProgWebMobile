@@ -72,6 +72,11 @@ function onDeviceReady() {
         }
         break;
       case "countdown":
+        if (data.count === 3) {
+          // Cacher le bouton pour quitter la partie
+          console.log(document.getElementById("quit"));
+          document.getElementById("quit").style.display = "none";
+        }
         // Affiche le countdown dans la game
         showCountdown(gameId, data.count);
 

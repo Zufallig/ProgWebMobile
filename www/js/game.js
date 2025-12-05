@@ -30,21 +30,11 @@ function showJoinRestartedGame(data) {
   // On change l'action réalisée par le bouton, pour ne pas recréer une autre partie en
   // plus de la nouvelle créée par un autre joueur
   restartBtn.onclick = () => {
-    joinRestartedGame(data.gameId);
+    joinGame(data.gameId);
   };
 }
 
-function joinRestartedGame(gameIdToJoin) {
-  // On tente de rejoindre la partie
-  ws.send(
-    JSON.stringify({
-      type: "joinGame",
-      username: username,
-      gameId: gameIdToJoin,
-      color: trailColor,
-    })
-  );
-}
+f;
 
 // Réinitialise les contrôles
 function resetControls() {
@@ -154,6 +144,9 @@ function gameEnded(message) {
   readyButton.style.backgroundColor = "#111";
   readyButton.style.color = "#fff";
   readySent = false;
+
+  // On remet le bouton Quitter pour la prochaine partie
+  document.getElementById("quit").style.display = "block";
 }
 
 /* -----------------------------
