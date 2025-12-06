@@ -1,4 +1,4 @@
-import init from "./init.js";
+import { global, globalUI, sendServer } from "../global.js";
 
 // Mise en place des fonctions sur les boutons
 document.getElementById("loginBtn").onclick = validateLogin;
@@ -8,9 +8,9 @@ function validateLogin() {
   const user = document.getElementById("loginInput").value.trim();
   const pass = document.getElementById("passwordInput").value.trim();
   if (user && pass) {
-    init.username = user;
+    global.username = user;
 
-    init.sendServer({
+    sendServer({
       type: "connectionPlayer",
       username: user,
       password: pass,
@@ -25,10 +25,10 @@ function validateLogin() {
 
 async function handleConnectionResponse(data) {
   if (data.valid) {
-    init.showScreen("homeScreen");
+    globalUI.goToHome();
   } else {
     // Message d'erreur
-    init.showMessageScreen("Erreur", "Mot de passe invalide");
+    globalUI.showMessageScreen("Erreur", "Mot de passe invalide");
   }
 }
 

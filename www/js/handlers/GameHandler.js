@@ -1,9 +1,6 @@
-import init from "./init.js";
+import { global, globalUI, sendServer } from "../global.js";
 import ControlHandler from "./ControlHandler.js";
 
-/* -----------------------------
-       DÉMARRER / REJOUER LE JEU
-    ----------------------------- */
 let svgCanvas;
 let gameStarted = false;
 // Valeur à mettre en accord avec la taille de svgCanvas (dans le HTML) pour prendre en compte taille du jeu 100*100
@@ -13,15 +10,15 @@ let trailColor = "#00ffff";
 
 // === Ajout des event listeners liés à la partie ===
 
-document.getElementById("gameEndHomeBtn").onclick = leaveGameAndGoToHome;
+document.getElementById("gameEndHomeBtn").onclick = globalUI.goToHome;
 document.getElementById("restartBtn").onclick = restartGame;
 
 // === Fonctions handlers de la partie ===
 
 function handleCreateGameResponse(data) {
-  init.gameId = data.gameId;
+  global.gameId = data.gameId;
 
-  init.sendServer({
+  sendServer({
     type: "getAllLobbies",
   });
 }
@@ -29,12 +26,12 @@ function handleCreateGameResponse(data) {
 function handleJoinGameResponse(data) {
   if (data.valid) {
     // Enregistrer l'ID de la partie
-    init.gameId = data.gameId;
+    global.gameId = data.gameId;
 
     // Aller sur la scène de jeu
-    init.showScreen("gameScreen");
+    globalUI.showScreen("gameScreen");
   } else {
-    init.showMessageScreen(
+    globalUI.showMessageScreen(
       "Erreur",
       "Impossible de rejoindre : " + data.reason
     );
@@ -48,7 +45,7 @@ function handleUpdateAllPlayerMovements(data) {
 }
 
 function handleEndGame(data) {
-  if (data.winnerName === init.username) {
+  if (data.winnerName === global.username) {
     gameEnded("Vous avez gagné ! ");
   } else {
     gameEnded("Vous avez perdu...");
@@ -59,17 +56,17 @@ function handleRestartGameResponse(data) {
   if (data.valid) {
     showJoinRestartedGame(data);
   } else {
-    init.showMessageScreen("Erreur", data.reason);
+    globalUI.showMessageScreen("Erreur", data.reason);
   }
 }
 
 function restartGame() {
   document.getElementById("gameEndedScreen").style.display = "none";
   // Envoi au serveur que l'on souhaite rejouer
-  init.sendServer({
+  sendServer({
     type: "restartGame",
-    username: init.username,
-    gameId: init.gameId,
+    username: global.username,
+    gameId: global.gameId,
     color: trailColor, // M : envoi de la couleur choisie
   });
 }
@@ -109,19 +106,6 @@ function startGame() {
   restartBtn.removeAttribute("data-id");
 }
 
-function leaveGameAndGoToHome() {
-  init.sendServer({
-    type: "leaveLobby",
-    username: init.username,
-    gameId: init.gameId,
-  });
-
-  init.goToHome();
-}
-/* -----------------------------
-       MISE À JOUR DU JEU
-    ----------------------------- */
-
 function updatePlayers(players) {
   svgCanvas.innerHTML = "";
 
@@ -137,7 +121,7 @@ function updatePlayers(players) {
     // M : mise à jour de la couleur
     state.color = player.color || state.color || trailColor; // M : mise à jour de la couleur
 
-    if (player.username === init.username && player.currentDirection) {
+    if (player.username === global.username && player.currentDirection) {
       ControlHandler.currentDirection = player.currentDirection;
     }
 
@@ -164,7 +148,7 @@ function gameEnded(message) {
   readyButton.textContent = "Prêt ? ";
   readyButton.style.backgroundColor = "#111";
   readyButton.style.color = "#fff";
-  init.readySent = false;
+  global.readySent = false;
 
   // On remet le bouton Quitter pour la prochaine partie
   document.getElementById("quitBtn").style.display = "block";
@@ -176,13 +160,6 @@ function createSvgElement(tag, attrs) {
   const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (let attr in attrs) el.setAttribute(attr, attrs[attr]);
   return el;
-}
-
-function trailColorToRGBA(hex, alpha) {
-  let r = parseInt(hex.slice(1, 3), 16),
-    g = parseInt(hex.slice(3, 5), 16),
-    b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
 }
 
 function renderTrail(playerState) {
@@ -205,6 +182,5 @@ export default {
   handleUpdateAllPlayerMovements,
   handleEndGame,
   handleRestartGameResponse,
-  leaveGameAndGoToHome,
   startGame,
 };

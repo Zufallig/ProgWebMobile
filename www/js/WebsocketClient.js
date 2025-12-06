@@ -1,18 +1,22 @@
-import ConnectionHandler from "./connexion.js";
-import LobbyHandler from "./LobbyHandler.js";
-import GameHandler from "./GameHandler.js";
-import LeaderboardHandler from "./LeaderboardHandler.js";
-import init from "./init.js";
+import ConnectionHandler from "./handlers/ConnectionHandler.js";
+import LobbyHandler from "./handlers/LobbyHandler.js";
+import GameHandler from "./handlers/GameHandler.js";
+import LeaderboardHandler from "./handlers/LeaderboardHandler.js";
+import { global } from "./global.js";
+import { init } from "./init.js";
 
-// On attend que Cordova soit prêt
+// Attente que Cordova soit prêt
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
-  init.ws.onopen = function () {
+  // Initialisation côté client
+  init();
+
+  global.ws.onopen = function () {
     console.log("Connecté au serveur WebSocket !");
   };
 
-  init.ws.onmessage = function (message) {
+  global.ws.onmessage = function (message) {
     let data = JSON.parse(message.data);
 
     console.log("Received: '" + message.data + "'");
@@ -28,7 +32,7 @@ function onDeviceReady() {
         break;
       case "updateLobbyInfos":
         // Le client demande à mettre à jour les informations sur les parties actuelles
-        LobbyHandler.handleUpdateLobbyInfos(data);
+        LobbyHandler.handleUpdateLobbyInfos();
         break;
       case "getAllLobbiesResponse":
         // Le serveur donne les informations à jour sur les parties

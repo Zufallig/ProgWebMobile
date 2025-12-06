@@ -1,46 +1,12 @@
-let ws = new WebSocket("ws://localhost:9898/");
-let username = "";
-let gameId = "";
-let readySent = false;
+import { global, globalUI } from "./global.js";
 
-document.getElementById("messageScreenBtn").onclick = closeMessageScreen;
+// === Initialisation côté client ===
 
-function sendServer(data) {
-  ws.send(JSON.stringify(data));
+export function init() {
+  // On initialise le websocket
+  global.ws = new WebSocket("ws://localhost:9898/");
+
+  // On place l'event listener pour les messages du serveur
+  document.getElementById("messageScreenBtn").onclick =
+    globalUI.closeMessageScreen;
 }
-
-function showScreen(id) {
-  document
-    .querySelectorAll(".screen")
-    .forEach((s) => (s.style.display = "none"));
-  document.getElementById(id).style.display = "flex";
-}
-
-// Fonction pour afficher un message dans un modal (par défaut, une erreur)
-function showMessageScreen(title, message) {
-  document.getElementById("messageScreen").style.display = "block";
-  document.getElementById("messageTitle").textContent = title || "Erreur";
-  document.getElementById("messageText").textContent =
-    message || "Une erreur est survenue";
-}
-
-function closeMessageScreen() {
-  document.getElementById("messageScreen").style.display = "none";
-}
-
-function goToHome() {
-  document.getElementById("gameEndedScreen").style.display = "none";
-  showScreen("homeScreen");
-}
-
-export default {
-  ws,
-  gameId,
-  username,
-  sendServer,
-  showScreen,
-  showMessageScreen,
-  closeMessageScreen,
-  goToHome,
-  readySent,
-};

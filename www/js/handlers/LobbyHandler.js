@@ -1,4 +1,4 @@
-import init from "./init.js";
+import { global, globalUI, sendServer } from "../global.js";
 import GameHandler from "./GameHandler.js";
 
 let allLobbies = [];
@@ -9,11 +9,11 @@ const perPage = 2;
 
 document.getElementById("playBtn").onclick = goToLobby;
 document.getElementById("toggleLobbyFormBtn").onclick = toggleLobbyForm;
-document.getElementById("lobbyHomeBtn").onclick = init.goToHome;
+document.getElementById("lobbyHomeBtn").onclick = globalUI.goToHome;
 document.getElementById("confirmCreateLobbyBtn").onclick = createLobby;
 document.getElementById("lobbySearchInput").oninput = filterLobbies;
 document.getElementById("readyBtn").onclick = setReady;
-document.getElementById("quitBtn").onclick = GameHandler.leaveGameAndGoToHome;
+document.getElementById("quitBtn").onclick = leaveLobbyAndGoToHome;
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("joinGameBtn")) {
@@ -23,8 +23,8 @@ document.addEventListener("click", (e) => {
 
 // === Fonctions handlers du lobby ===
 
-function handleUpdateLobbyInfos(data) {
-  init.sendServer({
+function handleUpdateLobbyInfos() {
+  sendServer({
     type: "getAllLobbies",
   });
 }
@@ -35,7 +35,7 @@ function handleGetAllLobbiesResponse(data) {
 
 function handleLeaveLobbyResponse(data) {
   if (!data.valid) {
-    init.showMessageScreen("Erreur", data.reason);
+    globalUI.showMessageScreen("Erreur", data.reason);
   }
 }
 
@@ -46,19 +46,20 @@ function handlePlayerReadyResponse(data) {
     readyButton.textContent = "Prêt ! ";
     readyButton.style.backgroundColor = "#ff00ff";
     readyButton.style.color = "#111";
+
+    // On cache le bouton pour quitter la partie
+    document.getElementById("quitBtn").style.display = "none";
   } else {
     // Afficher une erreur
-    init.showMessageScreen("Erreur", data.reason);
+    globalUI.showMessageScreen("Erreur", data.reason);
   }
 }
 
 function handleCountdown(data) {
   if (data.count === 3) {
-    // Cacher le bouton pour quitter la partie
-    document.getElementById("quitBtn").style.display = "none";
   }
   // Affiche le countdown dans la game
-  showCountdown(init.gameId, data.count);
+  showCountdown(global.gameId, data.count);
 
   // Démarrage de la partie
   if (data.count === 0) {
@@ -67,18 +68,31 @@ function handleCountdown(data) {
 }
 
 function handleKickPlayer() {
-  init.showMessageScreen("Temps écoulé", "Vous avez été expulsé de la partie");
-  init.showScreen("lobbyScreen");
+  globalUI.showMessageScreen(
+    "Temps écoulé",
+    "Vous avez été expulsé de la partie"
+  );
+  globalUI.showScreen("lobbyScreen");
 }
 
-// === Fonctions onclick ===
+// === Fonctions d'interface onclick ===
 
 function goToLobby() {
-  init.sendServer({
+  sendServer({
     type: "getAllLobbies",
   });
 
-  init.showScreen("lobbyScreen");
+  globalUI.showScreen("lobbyScreen");
+}
+
+function leaveLobbyAndGoToHome() {
+  sendServer({
+    type: "leaveLobby",
+    username: global.username,
+    gameId: global.gameId,
+  });
+
+  globalUI.goToHome();
 }
 
 function toggleLobbyForm() {
@@ -92,21 +106,21 @@ function createLobby() {
   const color = document.getElementById("colorPicker").value;
 
   if (!name) {
-    init.showMessageScreen("Erreur", "Veuillez entrer un nom de lobby !");
+    globalUI.showMessageScreen("Erreur", "Veuillez entrer un nom de lobby !");
     return;
   }
 
-  init.sendServer({
+  sendServer({
     type: "createGame",
     maxPlayers: maxPlayers,
-    creatorName: init.username,
+    creatorName: global.username,
     gameName: name,
     color: color,
   });
 
   document.getElementById("lobbyNameInput").value = "";
   toggleLobbyForm();
-  init.showScreen("gameScreen");
+  globalUI.showScreen("gameScreen");
 }
 
 function filterLobbies() {
@@ -116,25 +130,25 @@ function filterLobbies() {
 }
 
 function setReady() {
-  if (init.readySent || !init.gameId) {
+  if (global.readySent || !global.gameId) {
     return;
   }
 
-  init.readySent = true;
+  global.readySent = true;
 
-  init.sendServer({
+  sendServer({
     type: "playerReady",
-    username: init.username,
-    gameId: init.gameId,
+    username: global.username,
+    gameId: global.gameId,
     ready: true,
   });
 }
 
 function joinGame(gameId) {
   const color = document.getElementById("colorPicker").value;
-  init.sendServer({
+  sendServer({
     type: "joinGame",
-    username: init.username,
+    username: global.username,
     gameId: gameId,
     color: color || trailColor,
   });
@@ -204,7 +218,7 @@ async function renderLobbies(data) {
 function showCountdown(gameIdParam, count) {
   // A la place de "Prêt", on affiche le countdown dans le bouton ready
   let readyButton = document.getElementById("readyBtn");
-  if (init.gameId == gameIdParam && count > 0) {
+  if (global.gameId == gameIdParam && count > 0) {
     readyButton.textContent = count + "...";
   } else if (count === 0) {
     readyButton.textContent = "Partez !";

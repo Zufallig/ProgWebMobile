@@ -1,4 +1,4 @@
-import init from "./init.js";
+import { global, sendServer } from "../global.js";
 
 let lastSentDirection = null;
 let currentDirection = null;
@@ -27,7 +27,7 @@ function isOppositeDirection(newDir, currentDir) {
 }
 
 function sendMovement(dir) {
-  if (!dir || init.gameId === "") {
+  if (!dir || global.gameId === "") {
     return;
   }
 
@@ -39,10 +39,10 @@ function sendMovement(dir) {
   lastSentDirection = dir;
   currentDirection = dir;
 
-  init.sendServer({
+  sendServer({
     type: "playerMovement",
-    username: init.username,
-    gameId: init.gameId,
+    username: global.username,
+    gameId: global.gameId,
     direction: dir,
   });
 }

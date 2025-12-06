@@ -85,6 +85,13 @@ h2 {
   text-align: center;
 }
 
+#paginationControls {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 #paginationControls button {
   width: 70px;
   padding: 6px;
@@ -150,6 +157,9 @@ button:hover {
   z-index: 20;
 }
 
+#gameScreen {
+  flex-direction: column;
+}
 /* --- CONTRÔLES MOBILES --- */
 #globalMobileControls {
   display: none;
@@ -182,4 +192,14 @@ button:hover {
 .controlBtn:hover {
   background: #ff00ff;
   color: black;
+}
+
+#connectedUser {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+#lobbySearchInput {
+  width: 230px;
+  margin-top: 10px;
 }

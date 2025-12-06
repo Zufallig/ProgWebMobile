@@ -10,7 +10,7 @@
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark">
-    <title>Tron</title>
+    <title>TRON</title>
     <link href="css/tron.css" rel="stylesheet">
 
   </head>
@@ -29,7 +29,7 @@
       <!-- Menu principal -->
       <section id="homeScreen" class="screen">
         <h2>Bienvenue <span id="usernameDisplay"></span></h2>
-        <label>Couleur de la traînée :</label>
+        <label>Couleur :</label>
         <input type="color" id="colorPicker" value="#00ffff">
         <button id="playBtn">Jouer</button>
         <button id="leaderboardBtn">Classement</button>
@@ -45,21 +45,21 @@
       <!-- Écran de création de lobby -->
       <section id="lobbyScreen" class="screen">
         <h2>Lobby</h2>
-        <p id="connectedUser" style="font-size: 0.9rem; opacity: 0.8;"></p>
+        <p id="connectedUser"></p>
         <button id="toggleLobbyFormBtn">Créer un lobby</button>
-        <input id="lobbySearchInput" placeholder="Rechercher un lobby..." style="width: 230px; margin-top: 10px;" />
+        <input id="lobbySearchInput" placeholder="Rechercher un lobby..." />
         <div id="createLobbyForm">
           <input id="lobbyNameInput" placeholder="Nom du lobby">
           <input id="maxPlayersInput" type="number" min="2" max="4" value="2">
           <button id="confirmCreateLobbyBtn">Créer</button>
         </div>
         <div id="lobbyList"></div>
-        <div id="paginationControls" style="margin-top:10px; display:flex; gap:10px; align-items:center;"></div>
+        <div id="paginationControls"></div>
         <button id="lobbyHomeBtn">Accueil</button>
       </section>
 
       <!-- Écran de partie -->
-      <section id="gameScreen" class="screen" style="flex-direction: column;">
+      <section id="gameScreen" class="screen">
         <div id="hud">
           <button id="readyBtn">Prêt ?</button>
         </div>
@@ -94,8 +94,8 @@
 
     </div>
     <script src="cordova.js"></script>
-    <script src="./js/connexion.js" type="module"></script>
-    <script src="./js/websocket.js" type="module"></script>
+    <script src="./js/handlers/ConnectionHandler.js" type="module"></script>
+    <script src="./js/WebsocketClient.js" type="module"></script>
   </body>
 
 </html>

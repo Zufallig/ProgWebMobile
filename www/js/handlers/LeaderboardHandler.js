@@ -1,15 +1,15 @@
-import init from "./init.js";
+import { globalUI, sendServer } from "../global.js";
 
 // === Ajout des event listeners liés au classement ===
 
 document.getElementById("leaderboardBtn").onclick = goToLeaderboard;
-document.getElementById("leaderboardHomeBtn").onclick = init.goToHome;
+document.getElementById("leaderboardHomeBtn").onclick = globalUI.goToHome;
 
 // === Fonction handler du classement ===
 
 function handleGetLeaderboardResponse(data) {
   if (!data.valid) {
-    init.showMessageScreen("Erreur", data.reason);
+    globalUI.showMessageScreen("Erreur", data.reason);
     return;
   }
 
@@ -36,15 +36,15 @@ function handleGetLeaderboardResponse(data) {
   });
 }
 
-// === Fonction onclick ===
+// === Fonction d'interface onclick ===
 
 function goToLeaderboard() {
   // Le client clique sur le classement
-  init.sendServer({
+  sendServer({
     type: "getLeaderboard",
   });
 
-  init.showScreen("leaderboardScreen");
+  globalUI.showScreen("leaderboardScreen");
 }
 
 export default { handleGetLeaderboardResponse };
