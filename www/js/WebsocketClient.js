@@ -5,6 +5,8 @@ import LeaderboardHandler from "./handlers/LeaderboardHandler.js";
 import { global } from "./global.js";
 import { init } from "./init.js";
 
+// === Fichier qui gère les paquets venants du serveur ===
+
 // Attente que Cordova soit prêt
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -19,15 +21,15 @@ function onDeviceReady() {
   global.ws.onmessage = function (message) {
     let data = JSON.parse(message.data);
 
-    console.log("Received: '" + message.data + "'");
+    // console.log("Received: '" + message.data + "'");
 
     switch (data.type) {
       case "connectionResponse":
-        // Le client se connecte
+        // Le client se connecte sur le jeu
         ConnectionHandler.handleConnectionResponse(data);
         break;
       case "getLeaderboardResponse":
-        // Le client clique sur le classement
+        // Le client clique sur le bouton "Classement"
         LeaderboardHandler.handleGetLeaderboardResponse(data);
         break;
       case "updateLobbyInfos":

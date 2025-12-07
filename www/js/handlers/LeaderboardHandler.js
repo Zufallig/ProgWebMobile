@@ -3,28 +3,31 @@ import { globalUI, sendServer } from "../global.js";
 // === Ajout des event listeners liés au classement ===
 
 document.getElementById("leaderboardBtn").onclick = goToLeaderboard;
-document.getElementById("leaderboardHomeBtn").onclick = globalUI.goToHome;
+document.getElementById("leaderboardHomeBtn").onclick = () =>
+  globalUI.showScreen("homeScreen");
 
 // === Fonction handler du classement ===
 
+// Gère l'affichage de l'interface après un clic sur le bouton "Classement"
 function handleGetLeaderboardResponse(data) {
   if (!data.valid) {
     globalUI.showMessageScreen("Erreur", data.reason);
     return;
   }
 
+  // On récupère les informations sur les joueurs (nom, nombre de victoires, nombre de défaites)
   let playersArray = data.players;
-  if (!playersArray) {
-    return;
-  }
+
   const list = document.getElementById("playerList");
-  list.innerHTML = "#. Nom ( V / D )";
 
   if (playersArray.length === 0) {
     list.innerHTML = "<p>Pas de classement disponible pour le moment.</p>";
     return;
   }
 
+  list.innerHTML = "#. Nom ( V / D )";
+
+  // On affiche les stats des joueurs en HTML
   playersArray.forEach((player, number) => {
     const p = document.createElement("p");
     p.className = "playerItem";
@@ -38,8 +41,8 @@ function handleGetLeaderboardResponse(data) {
 
 // === Fonction d'interface onclick ===
 
+// Renvoie le client sur la page de classement
 function goToLeaderboard() {
-  // Le client clique sur le classement
   sendServer({
     type: "getLeaderboard",
   });

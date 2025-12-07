@@ -16,6 +16,7 @@ function validateLogin() {
       password: pass,
     });
 
+    // On affiche le nom dans l'interface de jeu
     document.getElementById("usernameDisplay").textContent = user;
     document.getElementById(
       "connectedUser"
@@ -23,9 +24,10 @@ function validateLogin() {
   }
 }
 
+// Gère l'affichage de l'interface après la tentative de connexion d'un client
 async function handleConnectionResponse(data) {
   if (data.valid) {
-    globalUI.goToHome();
+    globalUI.showScreen("homeScreen");
   } else {
     // Message d'erreur
     globalUI.showMessageScreen("Erreur", "Mot de passe invalide");

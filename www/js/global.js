@@ -1,6 +1,6 @@
 // === Variables et fonctions globales ===
 
-// Variables globales
+// Variables globales côté client accessibles depuis les différents fichiers
 export const global = {
   ws: null,
   username: "",
@@ -13,7 +13,6 @@ export const globalUI = {
   showScreen,
   showMessageScreen,
   closeMessageScreen,
-  goToHome,
 };
 
 // Fonction pour simplifier l'envoi de requêtes
@@ -37,13 +36,7 @@ function showMessageScreen(title, message) {
     message || "Une erreur est survenue";
 }
 
-// Fonction pour fermer un message ouvert
+// Fonction pour fermer un message modal ouvert
 function closeMessageScreen() {
   document.getElementById("messageScreen").style.display = "none";
-}
-
-// Fonction de retour à l'accueil
-function goToHome() {
-  document.getElementById("gameEndedScreen").style.display = "none";
-  showScreen("homeScreen");
 }

@@ -5,10 +5,11 @@ let currentDirection = null;
 
 // === Ajout des event listeners liés aux contrôles ===
 
-document.getElementById("upBtn").onclick = () => setDirection("up");
-document.getElementById("downBtn").onclick = () => setDirection("down");
-document.getElementById("leftBtn").onclick = () => setDirection("left");
-document.getElementById("rightBtn").onclick = () => setDirection("right");
+// Permet de se déplacer en cliquant sur les boutons
+document.getElementById("upBtn").onclick = () => sendMovement("up");
+document.getElementById("downBtn").onclick = () => sendMovement("down");
+document.getElementById("leftBtn").onclick = () => sendMovement("left");
+document.getElementById("rightBtn").onclick = () => sendMovement("right");
 
 // Réinitialise les contrôles
 function resetControls() {
@@ -16,6 +17,8 @@ function resetControls() {
   currentDirection = null;
 }
 
+// Permet de voir si la direction demandée par le client est opposée à sa direction actuelle
+// Et donc empêcher le client d'envoyer la requête au serveur car l'action est impossible
 function isOppositeDirection(newDir, currentDir) {
   if (!newDir || !currentDir) return false;
   return (
@@ -26,16 +29,18 @@ function isOppositeDirection(newDir, currentDir) {
   );
 }
 
+// Gère l'envoi de requêtes client liées au déplacement du joueur
 function sendMovement(dir) {
   if (!dir || global.gameId === "") {
     return;
   }
 
-  // Ignorer si la direction demandée est l'opposé de la direction actuelle
+  // Ignorer si la direction demandée est l'opposé de la direction actuelle ou la même que la direction actuelle
   if (dir === lastSentDirection || isOppositeDirection(dir, currentDirection)) {
     return;
   }
 
+  // Mise à jour des valeurs de direction
   lastSentDirection = dir;
   currentDirection = dir;
 
@@ -47,7 +52,7 @@ function sendMovement(dir) {
   });
 }
 
-// Fonction de contrôles
+// Fonction de contrôles pour le clavier
 document.addEventListener("keydown", (e) => {
   const movements = {
     ArrowUp: "up",
@@ -65,9 +70,5 @@ document.addEventListener("keydown", (e) => {
 
   sendMovement(dir);
 });
-
-function setDirection(dir) {
-  sendMovement(dir);
-}
 
 export default { resetControls, currentDirection };

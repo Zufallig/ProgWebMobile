@@ -9,7 +9,8 @@ const perPage = 2;
 
 document.getElementById("playBtn").onclick = goToLobby;
 document.getElementById("toggleLobbyFormBtn").onclick = toggleLobbyForm;
-document.getElementById("lobbyHomeBtn").onclick = globalUI.goToHome;
+document.getElementById("lobbyHomeBtn").onclick = () =>
+  globalUI.showScreen("homeScreen");
 document.getElementById("confirmCreateLobbyBtn").onclick = createLobby;
 document.getElementById("lobbySearchInput").oninput = filterLobbies;
 document.getElementById("readyBtn").onclick = setReady;
@@ -23,25 +24,29 @@ document.addEventListener("click", (e) => {
 
 // === Fonctions handlers du lobby ===
 
+// Demande la mise à jour des informations des lobbies courants
 function handleUpdateLobbyInfos() {
   sendServer({
     type: "getAllLobbies",
   });
 }
 
+// Gère la mise à jour des informations des lobbies courants
 function handleGetAllLobbiesResponse(data) {
   renderLobbies(data);
 }
 
+// Affiche un message d'erreur si quitter le lobby a entraîné une erreur
 function handleLeaveLobbyResponse(data) {
   if (!data.valid) {
     globalUI.showMessageScreen("Erreur", data.reason);
   }
 }
 
+// Gère l'interface après le clic sur le bouton "Prêt"
 function handlePlayerReadyResponse(data) {
   if (data.valid) {
-    // Changer l'interface pour afficher joueur prêt
+    // Changer l'apparencedu bouton "Prêt" pour afficher que le joueur est prêt
     let readyButton = document.getElementById("readyBtn");
     readyButton.textContent = "Prêt ! ";
     readyButton.style.backgroundColor = "#ff00ff";
@@ -55,10 +60,11 @@ function handlePlayerReadyResponse(data) {
   }
 }
 
+// Gère l'interface après le démarrage du compte à rebours de la partie
 function handleCountdown(data) {
   if (data.count === 3) {
   }
-  // Affiche le countdown dans la game
+  // Affiche le countdown dans le bouton
   showCountdown(global.gameId, data.count);
 
   // Démarrage de la partie
@@ -67,6 +73,7 @@ function handleCountdown(data) {
   }
 }
 
+// Affiche un message d'erreur si le joueur est expulé de la partie pour avoir mis trop de temps à se mettre "Prêt"
 function handleKickPlayer() {
   globalUI.showMessageScreen(
     "Temps écoulé",
@@ -77,6 +84,7 @@ function handleKickPlayer() {
 
 // === Fonctions d'interface onclick ===
 
+// Renvoie le joueur sur la page des lobbies
 function goToLobby() {
   sendServer({
     type: "getAllLobbies",
@@ -85,6 +93,7 @@ function goToLobby() {
   globalUI.showScreen("lobbyScreen");
 }
 
+// Demande de quitter le lobby
 function leaveLobbyAndGoToHome() {
   sendServer({
     type: "leaveLobby",
@@ -92,15 +101,18 @@ function leaveLobbyAndGoToHome() {
     gameId: global.gameId,
   });
 
-  globalUI.goToHome();
+  globalUI.showScreen("homeScreen");
 }
 
+// Affiche la liste des lobbies
 function toggleLobbyForm() {
   const form = document.getElementById("createLobbyForm");
   form.style.display = form.style.display === "flex" ? "none" : "flex";
 }
 
+// Gère la création d'un lobby
 function createLobby() {
+  // On récupère les valeurs entrées
   const name = document.getElementById("lobbyNameInput").value.trim();
   const maxPlayers = document.getElementById("maxPlayersInput").value;
   const color = document.getElementById("colorPicker").value;
@@ -129,6 +141,7 @@ function filterLobbies() {
   renderLobbies();
 }
 
+// Permet d'empêcher le spam des requêtes "Prêt"
 function setReady() {
   if (global.readySent || !global.gameId) {
     return;
@@ -144,6 +157,7 @@ function setReady() {
   });
 }
 
+// Gère quand le joueur rejoint une partie
 function joinGame(gameId) {
   const color = document.getElementById("colorPicker").value;
   sendServer({
@@ -154,17 +168,19 @@ function joinGame(gameId) {
   });
 }
 
+// Changer de page (précédent / suivant)
 function changePage(dir) {
-  // Changer de page (précédent / suivant)
   page += dir;
   renderLobbies();
 }
 
 // === Fonctions utilitaires ===
 
+// Gère la création d'un élément HTML lobby
 async function renderLobbies(data) {
   if (data) allLobbies = data.lobbies || [];
 
+  // On regarde si le joueur a tapé quelque chose dans la barre de recherche
   const search =
     document.getElementById("lobbySearchInput")?.value.toLowerCase() || "";
   const list = document.getElementById("lobbyList");
@@ -215,6 +231,7 @@ async function renderLobbies(data) {
   }
 }
 
+// Met à jour le bouton d'affichage du compte à rebours
 function showCountdown(gameIdParam, count) {
   // A la place de "Prêt", on affiche le countdown dans le bouton ready
   let readyButton = document.getElementById("readyBtn");
