@@ -1,12 +1,14 @@
 import { global, globalUI, sendServer } from "../global.js";
 import ControlHandler from "./ControlHandler.js";
 
-// Grille de jeu
-let svgCanvas;
 let gameStarted = false;
 // Valeur à mettre en accord avec la taille de svgCanvas (dans le HTML) pour prendre en compte taille du jeu 100*100
 const squareSize = 3;
+// Zone où sont ajoutées les polylines représentant les trails des joueurs
+let trailsGroup = document.getElementById("trails");
+// Etat des joueurs
 let playersState = {};
+// Couleur par défaut de la trail d'un joueur
 let trailColor = "#00ffff";
 
 // === Ajout des event listeners liés à la partie ===
@@ -70,38 +72,48 @@ function handleRestartGameResponse(data) {
 // === Fonctions supports aux handlers ===
 
 function updatePlayers(players) {
-  svgCanvas.innerHTML = "";
-
   players.forEach((player) => {
     if (!playersState[player.username]) {
+      // On crée un polyline par joueur
+      const polyline = createSvgElement("polyline", {
+        // La polyline a la couleur du joueur
+        stroke: player.color,
+        // On adapte la taille à la taille du canvas
+        "stroke-width": squareSize,
+      });
+
       playersState[player.username] = {
-        trail: [],
+        // On garde la trail du joueur
         color: player.color || trailColor,
+        // Pour accéder au polyline et modifier son attribut "points" plus tard
+        polyline: polyline,
       };
+
+      trailsGroup.append(polyline);
     }
 
-    const state = playersState[player.username];
-    state.color = player.color || state.color || trailColor;
+    playersState[player.username].color = player.color || trailColor;
 
     if (player.username === global.username && player.currentDirection) {
       ControlHandler.currentDirection = player.currentDirection;
     }
 
-    // si joueur mort, on continue d'afficher son trail
-    if (!player.alive) {
-      return renderTrail(state);
-    }
+    // On récupère la valeur des points du polyline du joueur
+    let polylinePoints =
+      playersState[player.username].polyline.getAttribute("points") || "";
 
-    // ajouter position au trail
-    state.trail.push({ x: player.x, y: player.y });
-
-    // dessiner trail
-    renderTrail(state);
+    // On met à jour l'attribut "points" en y ajoutant la nouvelle position du joueur
+    playersState[player.username].polyline.setAttribute(
+      "points",
+      // On prolonge le polyline avec les nouvelles positions du joueur
+      (polylinePoints += ` ${player.x * squareSize},${player.y * squareSize}`)
+    );
   });
 }
 
 function gameEnded(message) {
-  svgCanvas.innerHTML = "";
+  // On nettoie les trails des joueurs de la partie
+  trailsGroup.innerHTML = "";
   document.getElementById("gameEndText").textContent =
     message || "Fin de la partie";
   document.getElementById("gameEndedScreen").style.display = "block";
@@ -146,13 +158,13 @@ function showJoinRestartedGame(data) {
 // Démarre une partie
 function startGame() {
   gameStarted = true;
-  svgCanvas = document.getElementById("svgCanvas");
 
   // Réinitialisation des contrôles
   ControlHandler.resetControls();
 
+  // On récupère la couleur du joueur
   trailColor = document.getElementById("colorPicker").value;
-  svgCanvas.innerHTML = "";
+
   // Réinitialisation de l'état des joueurs
   playersState = {};
 
@@ -168,26 +180,11 @@ function startGame() {
   restartBtn.removeAttribute("data-id");
 }
 
-// Crée un élément SVG utilisé pour l'affichage des motos
+// Fonction utilitaire pour créer un polyline SVG utilisé pour l'affichage des motos
 function createSvgElement(tag, attrs) {
   const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (let attr in attrs) el.setAttribute(attr, attrs[attr]);
   return el;
-}
-
-// Affiche les trails des motos
-function renderTrail(playerState) {
-  const color = playerState.color;
-  playerState.trail.forEach((seg) => {
-    const rect = createSvgElement("rect", {
-      x: seg.x * squareSize,
-      y: seg.y * squareSize,
-      width: squareSize,
-      height: squareSize,
-      fill: color,
-    });
-    svgCanvas.appendChild(rect);
-  });
 }
 
 export default {
