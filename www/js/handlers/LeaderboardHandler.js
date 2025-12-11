@@ -25,14 +25,14 @@ function handleGetLeaderboardResponse(data) {
     return;
   }
 
-  list.innerHTML = "#. Nom ( V / D )";
+  list.innerHTML = "<p># <strong class='playerName'>Nom</strong> ( V / D )</p>";
 
   // On affiche les stats des joueurs en HTML
   playersArray.forEach((player, number) => {
     const p = document.createElement("p");
     p.className = "playerItem";
     p.innerHTML = `
-        ${number + 1}. <strong class="playerName">${player.username}</strong> 
+        #${number + 1} <strong class="playerName">${player.username}</strong> 
         ( ${player.wins} / ${player.losses} )<br>
     `;
     list.appendChild(p);

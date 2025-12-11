@@ -71,6 +71,7 @@ function handleRestartGameResponse(data) {
 
 // === Fonctions supports aux handlers ===
 
+// Gère la mise à jour des trails des joueurs
 function updatePlayers(players) {
   players.forEach((player) => {
     if (!playersState[player.username]) {
@@ -95,6 +96,7 @@ function updatePlayers(players) {
     playersState[player.username].color = player.color || trailColor;
 
     if (player.username === global.username && player.currentDirection) {
+      // On garde la direction des joueurs pour éviter le spam de directions impossibles
       ControlHandler.currentDirection = player.currentDirection;
     }
 
@@ -111,13 +113,19 @@ function updatePlayers(players) {
   });
 }
 
+// Gère l'état de l'interface de fin de partie
 function gameEnded(message) {
   // On nettoie les trails des joueurs de la partie
   trailsGroup.innerHTML = "";
+
+  // Affichage du message de fin de partie
   document.getElementById("gameEndText").textContent =
     message || "Fin de la partie";
   document.getElementById("gameEndedScreen").style.display = "block";
+
   document.getElementById("globalMobileControls").style.display = "none";
+
+  // Réinitialisation de l'état du bouton prêt
   let readyButton = document.getElementById("readyBtn");
   readyButton.textContent = "Prêt ? ";
   readyButton.style.backgroundColor = "#111";
@@ -142,6 +150,7 @@ function restartGame() {
 
 // Gère l'affichage de l'interface quand un autre joueur souhaite rejouer
 function showJoinRestartedGame(data) {
+  // Affichage du bouton pour rejoindre la nouvelle partie
   let restartBtn = document.getElementById("restartBtn");
   restartBtn.textContent = "Rejoindre";
   document.getElementById("gameEndText").textContent =
@@ -155,7 +164,7 @@ function showJoinRestartedGame(data) {
 
 // === Fonctions outils ===
 
-// Démarre une partie
+// Démarre une partie : fonction utilisée dans LobbyHandler
 function startGame() {
   gameStarted = true;
 
