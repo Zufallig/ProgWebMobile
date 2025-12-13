@@ -92,10 +92,18 @@ button:hover {
 /* --- SCORE ET AFFICHAGE EN JEU --- */
 #hud {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   margin: 10px 0;
+}
+
+#readyBtn {
+  min-width: 200px;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
 }
 
 /* --- CANVAS DU JEU --- */
@@ -155,3 +163,62 @@ button:hover {
   background: #ff00ff;
   color: black;
 }
+
+
+
+/* Boutons de choix de couleur */
+.colorButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.colorOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.colorBtn {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.colorBtn:hover:not(:disabled) {
+  transform: scale(1.1);
+  border-color: #ff00ff;
+}
+
+.colorBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.colorLabel {
+  display: none;
+  font-size: 0.7rem;
+  color: #fff;
+  text-align: center;
+  min-height: 12px;
+  white-space: nowrap;
+  text-shadow: 0 0 3px #00ffff;
+}
+
+#colorSelection {
+  text-align: center;
+  padding: 5px;
+}
+
+#colorSelection p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff;
+}
+

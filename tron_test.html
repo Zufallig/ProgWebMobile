@@ -31,8 +31,6 @@
     <!-- Menu principal -->
     <section id="homeScreen" class="screen">
       <h2>Bienvenue <span id="usernameDisplay"></span></h2>
-      <label>Couleur de la traînée :</label>
-      <input type="color" id="colorPicker" value="#00ffff">
       <button onclick="goToLobby()">Jouer</button>
       <button onclick="goToLeaderboard()">Classement</button>
     </section>
@@ -66,7 +64,28 @@
     <!-- Écran de jeu -->
     <section id="gameScreen" class="screen" style="flex-direction: column;">
       <div id="hud">
-        <span id="scoreDisplay">Score: 0</span>
+		<!-- Choix de couleur -->
+		  <div id="colorSelection">
+			<p style="margin:5px 0;">Choisis ta couleur :</p>
+			 <div class="colorButtons">
+			   <div class="colorOption">
+				 <button class="colorBtn" style="background:#00ffff" onclick="chooseColor('#00ffff')"></button>
+				 <span class="colorLabel" data-color="#00ffff"></span>
+			   </div>
+			   <div class="colorOption">
+				 <button class="colorBtn" style="background:#ff00ff" onclick="chooseColor('#ff00ff')"></button>
+				 <span class="colorLabel" data-color="#ff00ff"></span>
+			   </div>
+			   <div class="colorOption">
+				 <button class="colorBtn" style="background:#00ff00" onclick="chooseColor('#00ff00')"></button>
+				 <span class="colorLabel" data-color="#00ff00"></span>
+			   </div>
+			   <div class="colorOption">
+				 <button class="colorBtn" style="background:#ffff00" onclick="chooseColor('#ffff00')"></button>
+				 <span class="colorLabel" data-color="#ffff00"></span>
+			   </div>
+			 </div>
+		  </div>
         <button id="readyBtn" onclick="setReady()">Prêt ?</button>
       </div>
       <svg id="svgCanvas" xmlns="http://www.w3.org/2000/svg" width="300" height="300"></svg>

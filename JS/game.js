@@ -154,6 +154,8 @@ function trailColorToRGBA(hex, alpha) {
 
 function goToHome() {
   document.getElementById("gameEndedScreen").style.display = "none";
+  document.getElementById("globalMobileControls").style.display = "none";
+  gameStarted = false;
   showScreen("homeScreen");
 }
 

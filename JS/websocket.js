@@ -92,6 +92,12 @@ ws.onmessage = function (message) {
         gameEnded("Vous avez perdu...");
       }
       break;
+	case "ColorUpdate":
+	  updateBlockedColors(data.colorsTaken);
+	  break;
+	case "ColorChangeError":
+	  showErrorScreen(data.reason);
+	  break;
     case "restartGameResponse":
       if (data.valid) {
         showJoinRestartedGame(data);

@@ -24,17 +24,17 @@ function toggleLobbyForm() {
 function createLobby() {
   const name = document.getElementById("lobbyNameInput").value.trim();
   const maxPlayers = document.getElementById("maxPlayersInput").value;
-  const color = document.getElementById("colorPicker").value; // M : ajout couleur
+  const color = "#00ffff"; // Couleur par défaut cyan
 
   if (!name) return showErrorScreen("Veuillez entrer un nom de lobby !");
 
   ws.send(
     JSON.stringify({
+      creatorName: username,
       type: "createGame",
       maxPlayers: maxPlayers,
-      creatorName: username,
       gameName: name,
-      color: color, // M : envoi couleur
+      color: color,
     })
   );
 
@@ -81,7 +81,7 @@ function renderLobbies(data) {
       <div class="lobbyItem">
         <strong>${lobby.gameName}</strong><br>
         Joueurs : ${lobby.currentPlayers}/${lobby.maxPlayers}<br>
-        <button onclick="joinLobby('${lobby.gameId}')">Rejoindre</button>
+        <button onclick="joinGame('${lobby.gameId}')">Rejoindre</button>
       </div>
     `;
   });
@@ -109,14 +109,14 @@ function filterLobbies() {
 }
 
 function joinGame(gameId) {
-  const color = document.getElementById("colorPicker").value; // M : pareil ajout couleur
+  const color = "#00ffff"; // Couleur par défaut cyan
 
   ws.send(
     JSON.stringify({
       type: "joinGame",
       username: username,
       gameId: gameId,
-      color: color, // M : envoi de la couleur choisie
+      color: color,
     })
   );
 }
@@ -144,4 +144,91 @@ function showCountdown(gameIdParam, count) {
   } else if (count === 0) {
     readyButton.textContent = "Partez !";
   }
+}
+
+
+
+function chooseColor(color) {
+  if (!gameId) return;
+
+  // Envoyer la demande au serveur
+  ws.send(
+    JSON.stringify({
+      type: "ColorChange",
+      username: username,
+      color: color,
+      gameId: gameId,
+    })
+  );
+}
+
+function updateBlockedColors(colorsTaken) {
+  const colorBtns = document.querySelectorAll(".colorBtn");
+
+  colorBtns.forEach(btn => {
+    const color = btn.style.background;
+    const colorHex = rgbToHex(color);
+
+    // Vérifier si la couleur est prise par quelqu'un
+    const takenBy = colorsTaken.find(c => c.color === colorHex);
+
+    // Trouver le label correspondant
+    const colorLabel = document.querySelector(`.colorLabel[data-color="${colorHex}"]`);
+
+    if (takenBy) {
+      // La couleur est prise
+      
+      // Si c'est la couleur de l'utilisateur actuel
+      if (takenBy.username === username) {
+        // Permettre de cliquer pour changer
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+        btn.style.border = "3px solid #fff";
+        btn.style.boxShadow = "0 0 15px #fff";
+        btn.style.transform = "scale(1.1)";
+      } else {
+        // Couleur prise par un autre joueur : désactiver
+        btn.disabled = true;
+        btn.style.opacity = "0.3";
+        btn.style.cursor = "not-allowed";
+        btn.style.border = "none";
+        btn.style.boxShadow = "none";
+        btn.style.transform = "scale(1)";
+      }
+      
+      // Afficher le nom du joueur sous le bouton
+      if (colorLabel) {
+        colorLabel.textContent = takenBy.username;
+        colorLabel.style.display = "block";
+      }
+    } else {
+      // La couleur est disponible
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+      btn.style.border = "none";
+      btn.style.boxShadow = "none";
+      btn.style.transform = "scale(1)";
+      
+      // Cacher le label
+      if (colorLabel) {
+        colorLabel.textContent = "";
+        colorLabel.style.display = "none";
+      }
+    }
+  });
+}
+
+function rgbToHex(rgb) {
+  if (rgb.startsWith('#')) return rgb;
+  
+  const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  if (!match) return rgb;
+  
+  const r = parseInt(match[1]);
+  const g = parseInt(match[2]);
+  const b = parseInt(match[3]);
+  
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
