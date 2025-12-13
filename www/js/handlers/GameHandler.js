@@ -1,11 +1,11 @@
 import { global, globalUI, sendServer } from "../global.js";
 import ControlHandler from "./ControlHandler.js";
 
+// Grille de jeu
+let svgCanvas = document.getElementById("svgCanvas");
 let gameStarted = false;
 // Valeur à mettre en accord avec la taille de svgCanvas (dans le HTML) pour prendre en compte taille du jeu 100*100
 const squareSize = 3;
-// Zone où sont ajoutées les polylines représentant les trails des joueurs
-let trailsGroup = document.getElementById("trails");
 // Etat des joueurs
 let playersState = {};
 // Couleur par défaut de la trail d'un joueur
@@ -75,48 +75,34 @@ function handleRestartGameResponse(data) {
 function updatePlayers(players) {
   players.forEach((player) => {
     if (!playersState[player.username]) {
-      // On crée un polyline par joueur
-      const polyline = createSvgElement("polyline", {
-        // La polyline a la couleur du joueur
-        stroke: player.color,
-        // On adapte la taille à la taille du canvas
-        "stroke-width": squareSize,
-      });
-
       playersState[player.username] = {
-        // On garde la trail du joueur
         color: player.color || trailColor,
-        // Pour accéder au polyline et modifier son attribut "points" plus tard
-        polyline: polyline,
       };
-
-      trailsGroup.append(polyline);
     }
-
-    playersState[player.username].color = player.color || trailColor;
+    const state = playersState[player.username];
+    state.color = player.color || trailColor;
 
     if (player.username === global.username && player.currentDirection) {
       // On garde la direction des joueurs pour éviter le spam de directions impossibles
       ControlHandler.currentDirection = player.currentDirection;
     }
 
-    // On récupère la valeur des points du polyline du joueur
-    let polylinePoints =
-      playersState[player.username].polyline.getAttribute("points") || "";
-
-    // On met à jour l'attribut "points" en y ajoutant la nouvelle position du joueur
-    playersState[player.username].polyline.setAttribute(
-      "points",
-      // On prolonge le polyline avec les nouvelles positions du joueur
-      (polylinePoints += ` ${player.x * squareSize},${player.y * squareSize}`)
-    );
+    // On dessine le dernier rect du trail
+    const rect = createSvgElement("rect", {
+      x: player.x * squareSize,
+      y: player.y * squareSize,
+      width: squareSize,
+      height: squareSize,
+      fill: state.color,
+    });
+    // On l'ajoute au SVG
+    svgCanvas.append(rect);
   });
 }
 
 // Gère l'état de l'interface de fin de partie
 function gameEnded(message) {
-  // On nettoie les trails des joueurs de la partie
-  trailsGroup.innerHTML = "";
+  svgCanvas.innerHTML = "";
 
   // Affichage du message de fin de partie
   document.getElementById("gameEndText").textContent =
