@@ -29,8 +29,6 @@
       <!-- Menu principal -->
       <section id="homeScreen" class="screen">
         <h2>Bienvenue <span id="usernameDisplay"></span></h2>
-        <label>Couleur :</label>
-        <input type="color" id="colorPicker" value="#00ffff">
         <button id="playBtn">Jouer</button>
         <button id="leaderboardBtn">Classement</button>
       </section>
@@ -61,6 +59,29 @@
       <!-- Écran de partie -->
       <section id="gameScreen" class="screen">
         <div id="hud">
+          <!-- Choix de couleur -->
+          <div id="colorSelection">
+            <p>Choisis ta couleur :</p>
+            <div class="colorButtons">
+              <div class="colorOption">
+                <button class="colorBtn" id="cyanBtn"></button>
+                <span class="colorLabel" data-color="#00ffff"></span>
+              </div>
+              <div class="colorOption">
+                <button class="colorBtn" id="pinkBtn"></button>
+                <span class="colorLabel" data-color="#ff00ff"></span>
+              </div>
+              <div class="colorOption">
+                <button class="colorBtn" id="greenBtn"></button>
+                <span class="colorLabel" data-color="#00ff00"></span>
+              </div>
+              <div class="colorOption">
+                <button class="colorBtn" id="yellowBtn"></button>
+                <span class="colorLabel" data-color="#ffff00"></span>
+              </div>
+            </div>
+          </div>
+
           <button id="readyBtn">Prêt ?</button>
         </div>
         <svg id="svgCanvas" xmlns="http://www.w3.org/2000/svg" width="300" height="300">

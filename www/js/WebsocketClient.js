@@ -2,7 +2,7 @@ import ConnectionHandler from "./handlers/ConnectionHandler.js";
 import LobbyHandler from "./handlers/LobbyHandler.js";
 import GameHandler from "./handlers/GameHandler.js";
 import LeaderboardHandler from "./handlers/LeaderboardHandler.js";
-import { global } from "./global.js";
+import { global, globalUI } from "./global.js";
 import { init } from "./init.js";
 
 // === Fichier qui gère les paquets venants du serveur ===
@@ -63,6 +63,14 @@ function onDeviceReady() {
       case "joinGameResponse":
         // Le client souhaite rejoindre une partie
         GameHandler.handleJoinGameResponse(data);
+        break;
+      case "updateColor":
+        // Le serveur met à jour les couleurs des joueurs
+        LobbyHandler.handleUpdateColor(data);
+        break;
+      case "changeColorResponse":
+        // Le client souhaite changer de couleur
+        LobbyHandler.handleChangeColorResponse(data);
         break;
       case "updateAllPlayerMovements":
         // Le client reçoit l'état de la grille de jeu

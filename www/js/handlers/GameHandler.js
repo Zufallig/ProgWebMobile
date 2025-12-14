@@ -157,9 +157,6 @@ function startGame() {
   // Réinitialisation des contrôles
   ControlHandler.resetControls();
 
-  // On récupère la couleur du joueur
-  trailColor = document.getElementById("colorPicker").value;
-
   // Réinitialisation de l'état des joueurs
   playersState = {};
 
