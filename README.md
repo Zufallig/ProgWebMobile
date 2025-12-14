@@ -82,6 +82,8 @@ node WebsocketServer.js   # WebSocket exposé sur ws://localhost:9898/, à chang
 ```sh
 # Depuis le dossier client
 cd "D:\ProgWebMobile"
+# Activer l'environnement conda DevWeb pour avoir cordova (cf. Moodle pour la mise en place de cet environnement)
+conda activate DevWeb
 npm install
 cordova platform add browser   # s'il n'est pas déjà ajouté
 cordova run browser            # ouvre l’app dans le navigateur
@@ -93,7 +95,13 @@ cordova run browser            # ouvre l’app dans le navigateur
 
 - Pour lancer le client sur Android, vous aurez besoin d'[Android Studio](https://developer.android.com/studio?hl=fr).
 
-- Dans la partie client du projet, commencez par ajouter la plateforme Android :
+- Dans la partie client du projet, activez l'environnement Conda DevWeb :
+
+```sh
+conda activate DevWeb
+```
+
+- Ajoutez la plateforme Android :
 
 ```sh
 cordova platform add android
