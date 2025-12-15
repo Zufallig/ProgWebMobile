@@ -13,8 +13,10 @@ let trailColor = "#00ffff";
 
 // === Ajout des event listeners liés à la partie ===
 
-document.getElementById("gameEndHomeBtn").onclick = () =>
+document.getElementById("gameEndHomeBtn").onclick = () => {
+  document.getElementById("overlay").style.display = "none";
   globalUI.showScreen("homeScreen");
+};
 document.getElementById("restartBtn").onclick = restartGame;
 
 // === Fonctions handlers de la partie ===
@@ -33,6 +35,7 @@ function handleJoinGameResponse(data) {
   if (data.valid) {
     // Enregistrer l'ID de la partie comme étant la partie actuelle du client
     global.gameId = data.gameId;
+    document.getElementById("overlay").style.display = "none";
 
     // Aller sur l'écran de jeu
     globalUI.showScreen("gameScreen");
@@ -111,6 +114,9 @@ function gameEnded(message) {
 
   document.getElementById("globalMobileControls").style.display = "none";
 
+  // On active l'overlay
+  document.getElementById("overlay").style.display = "block";
+
   // Réinitialisation de l'état du bouton prêt
   let readyButton = document.getElementById("readyBtn");
   readyButton.textContent = "Prêt ? ";
@@ -118,13 +124,18 @@ function gameEnded(message) {
   readyButton.style.color = "#fff";
   global.readySent = false;
 
-  // On remet le bouton Quitter pour la prochaine partie
+  // On remet le bouton Quitter pour la partie
   document.getElementById("quitBtn").style.display = "block";
+
+  // On remet le texte "Choisis ta couleur"
+  document.querySelector("#colorSelection > p").style.display = "block";
 }
 
 // Envoie une requête au serveur pour rejouer une partie
 function restartGame() {
   document.getElementById("gameEndedScreen").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
+
   // Envoi au serveur que l'on souhaite rejouer
   sendServer({
     type: "restartGame",

@@ -30,7 +30,9 @@ function showScreen(id) {
 
 // Fonction pour afficher un message dans un modal (par défaut, une erreur)
 function showMessageScreen(title, message) {
+  document.getElementById("overlay").style.display = "block";
   document.getElementById("messageScreen").style.display = "block";
+
   document.getElementById("messageTitle").textContent = title || "Erreur";
   document.getElementById("messageText").textContent =
     message || "Une erreur est survenue";
@@ -38,5 +40,6 @@ function showMessageScreen(title, message) {
 
 // Fonction pour fermer un message modal ouvert
 function closeMessageScreen() {
+  document.getElementById("overlay").style.display = "none";
   document.getElementById("messageScreen").style.display = "none";
 }

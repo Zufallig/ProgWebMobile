@@ -58,6 +58,9 @@ function handlePlayerReadyResponse(data) {
 
     // On cache le bouton pour quitter la partie
     document.getElementById("quitBtn").style.display = "none";
+
+    // On cache le texte "Choisis ta couleur"
+    document.querySelector("#colorSelection > p").style.display = "none";
   } else {
     // Afficher une erreur
     globalUI.showMessageScreen("Erreur", data.reason);
@@ -265,6 +268,7 @@ function showCountdown(gameIdParam, count) {
 // Mise à jour des couleurs disponibles et indisponibles
 function handleUpdateColor(data) {
   let colorsTaken = data.colorsTaken;
+
   const colorBtns = document.querySelectorAll(".colorBtn");
 
   colorBtns.forEach((btn) => {
@@ -274,9 +278,7 @@ function handleUpdateColor(data) {
     const takenBy = colorsTaken.find((c) => c.color === colorHex);
 
     // Trouver le label correspondant
-    const colorLabel = document.querySelector(
-      `.colorLabel[data-color="${colorHex}"]`
-    );
+    const colorLabel = btn.nextElementSibling;
 
     if (takenBy) {
       // La couleur est prise

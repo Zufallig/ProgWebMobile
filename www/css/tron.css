@@ -155,7 +155,7 @@ button:hover {
   box-shadow: 0 0 20px #ff00ff;
   text-align: center;
   display: none;
-  z-index: 20;
+  z-index: 60;
 }
 
 #gameScreen {
@@ -283,4 +283,15 @@ button:hover {
   font-size: 0.9rem;
   color: #00ffff;
   text-shadow: 0 0 5px #00ffff;
+}
+
+#overlay {
+  position: fixed;
+  z-index: 40;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
 }
