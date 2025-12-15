@@ -14,14 +14,14 @@ Ce projet est un jeu multijoueur inspiré de Tron, jouable à la fois dans le na
 
 ## 3. Architecture du système
 
-| Couche                   | Rôle                                                       | Fichiers clés                                                                                                                                |
-| ------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Client Cordova           | UI, contrôles clavier/tactile, rendu des trails            | `www/index.html`, `www/css/tron.css`, `www/js/*`                                                                                             |
-| Communication temps réel | Messages JSON sur WebSocket                                | `www/js/init.js`, `www/js/WebsocketClient.js`                                                                                                |
-| Serveur Node.js          | Gestion des connexions, lobbies, boucle de jeu, collisions | `../ProgWebMobile_TRON_serveur/WebsocketServer.js`, `GameHandler.js`, `Game.js`, `Player.js`                                                 |
-| Base de données          | Persistance des joueurs et du leaderboard                  | MongoDB (URL par défaut `mongodb://127.0.0.1:27017/mongo-data` dans `db.js`), schémas Mongoose dans `../ProgWebMobile_TRON_serveur/models/*` |
+| Couche                   | Rôle                                                       | Fichiers clés                                                                                                                  |
+| ------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Client Cordova           | UI, contrôles clavier/tactile, rendu des trails            | `client/www/index.html`, `client/www/css/tron.css`, `client/www/js/*`                                                          |
+| Communication temps réel | Messages JSON sur WebSocket                                | `client/www/js/init.js`, `client/www/js/WebsocketClient.js`                                                                    |
+| Serveur Node.js          | Gestion des connexions, lobbies, boucle de jeu, collisions | `serveur/WebsocketServer.js`, `serveur/GameHandler.js`, `serveur/Game.js`, `serveur/Player.js`                                 |
+| Base de données          | Persistance des joueurs et du leaderboard                  | MongoDB (URL par défaut `mongodb://127.0.0.1:27017/mongo-data` dans `serveur/db.js`), schémas Mongoose dans `serveur/models/*` |
 
-## 4. Backend (dossier `../ProgWebMobile_TRON_serveur`)
+## 4. Backend (dossier `serveur/`)
 
 - **Point d’entrée (`WebsocketServer.js`)** : expose le serveur WebSocket sur le port 9898 et route les messages (`connectionPlayer`, `getAllLobbies`, `createGame`, `joinGame`, `leaveLobby`, `playerReady`, `playerMovement`, `restartGame`, `getLeaderboard`, etc.).
 - **Orchestration (`GameHandler.js`)** : gère les connexions actives, les lobbies, le compte à rebours, la diffusion des états de jeu et la persistance.
@@ -30,7 +30,7 @@ Ce projet est un jeu multijoueur inspiré de Tron, jouable à la fois dans le na
 - **Lobbies** : création avec nom + capacité (2 à 4), système de recherche, attente que tous les joueurs sont prêts (compte à rebours, kick si délai dépassé).
 - **Persistance MongoDB** : collections `players` (identifiant, mot de passe en clair, victoires/défaites) et `games` (historique des parties, gagnant). Connexion par défaut dans `db.js`.
 
-## 5. Frontend Cordova (HTML/CSS/JS)
+## 5. Frontend Cordova (dosser `client/`)
 
 - **Écrans** : connexion, accueil (choix couleur), lobby (création/recherche/pagination), partie, fin de partie, leaderboard.
 - **Flux WebSocket** : initialisé dans `www/js/init.js` (`global.ws = new WebSocket("ws://localhost:9898/");`) puis centralisé dans `www/js/WebsocketClient.js` qui distribue les paquets vers les handlers.
@@ -53,22 +53,21 @@ Ce projet est un jeu multijoueur inspiré de Tron, jouable à la fois dans le na
 | Cordova             | `npm install -g cordova` | Build/run client web et mobile                                |
 | MongoDB             | ≥ 6                      | Persistance joueurs / classement                              |
 
-### Installation sous Windows
+### Installation
 
 ### 6.1 Lancer MongoDB
 
 ```sh
 # Depuis le terminal du dossier serveur
-mongod --dbpath D:\data\db
+mongod --dbpath ./mongo-data
 ```
 
 ### 6.2 Lancer le serveur Node.js
 
 ```sh
 # Depuis un nouveau terminal et le dossier serveur
-cd "D:\ProgWebMobile_TRON_serveur"
+cd serveur
 npm install
-npm install ws
 #Lancer le serveur dans le même terminal
 node WebsocketServer.js   # WebSocket exposé sur ws://localhost:9898/, à changer au besoin
 ```
@@ -81,7 +80,7 @@ node WebsocketServer.js   # WebSocket exposé sur ws://localhost:9898/, à chang
 
 ```sh
 # Depuis le dossier client
-cd "D:\ProgWebMobile"
+cd client
 # Activer l'environnement conda DevWeb pour avoir cordova (cf. Moodle pour la mise en place de cet environnement)
 conda activate DevWeb
 npm install
@@ -98,6 +97,9 @@ cordova run browser            # ouvre l’app dans le navigateur
 - Dans la partie client du projet, activez l'environnement Conda DevWeb :
 
 ```sh
+# Depuis le dossier client
+cd client
+# Activer l'environnement conda DevWeb pour avoir cordova (cf. Moodle pour la mise en place de cet environnement)
 conda activate DevWeb
 ```
 
@@ -108,7 +110,7 @@ cordova platform add android
 cordova build android
 ```
 
-- Lancez un émulateur sur Android Studio (ou connectez votre téléphone à votre ordinateur, [voir la procédure ici](https://developer.android.com/codelabs/basic-android-kotlin-compose-connect-device?hl=fr)).
+- Lancez un émulateur sur Android Studio (ou connectez votre téléphone à votre ordinateur, [voir la procédure ici](https://developer.android.com/codelabs/basic-android-kotlin-compose-connect-device?hl=fr)) sur le même réseau.
 
 - Ensuite, lancez la commande :
 
@@ -118,7 +120,7 @@ cordova run android
 
 ## 7. Structure du dépôt
 
-- 📁 **ProgWebMobile_TRON_serveur/**
+- 📁 **serveur/**
 
   - 📁 **models/**
     - 📄 `PlayerModel.js`
@@ -129,7 +131,7 @@ cordova run android
   - 📄 `Player.js`
   - 📄 `WebsocketServer.js`
 
-- 📁 **ProgWebMobile/**
+- 📁 **client/**
   - 📁 **www/**
     - 📁 **css/**
       - 📄 `tron.css`
@@ -146,8 +148,9 @@ cordova run android
       - 📄 `init.js`
       - 📄 `WebsocketClient.js`
   - 📄 `index.html`
-
-<!--Completer -->
+- 📁 **mongo_data/**
+- 📄 `specification_paquets.md`
+- 📄 `README.md`
 
 ## 8. Fonctionnalités implémentées
 
