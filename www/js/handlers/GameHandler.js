@@ -23,8 +23,9 @@ document.getElementById("restartBtn").onclick = restartGame;
 
 // Gère la mise à jour des lobbies après la création d'un lobby
 function handleCreateGameResponse(data) {
-  global.gameId = data.gameId;
-
+  if (data.creatorName === global.username) {
+    global.gameId = data.gameId;
+  }
   sendServer({
     type: "getAllLobbies",
   });

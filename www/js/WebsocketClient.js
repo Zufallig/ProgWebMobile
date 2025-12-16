@@ -2,7 +2,7 @@ import ConnectionHandler from "./handlers/ConnectionHandler.js";
 import LobbyHandler from "./handlers/LobbyHandler.js";
 import GameHandler from "./handlers/GameHandler.js";
 import LeaderboardHandler from "./handlers/LeaderboardHandler.js";
-import { global, globalUI } from "./global.js";
+import { global } from "./global.js";
 import { init } from "./init.js";
 
 // === Fichier qui gère les paquets venants du serveur ===
