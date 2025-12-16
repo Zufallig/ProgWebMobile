@@ -2,38 +2,30 @@
 
 ## 1. Présentation du projet
 
-Ce projet est un jeu multijoueur inspiré de Tron, jouable à la fois dans le navigateur et sur mobile grâce à Cordova. L’application présente une architecture client–serveur en temps réel et permet une authentification simple, la création de lobbies, la possibilité de jouer plusieurs parties en parallèle et la persistance des scores dans MongoDB.
+Ce projet est un jeu multijoueur inspiré de Tron, jouable à la fois dans le navigateur et sur mobile grâce à Cordova. L’application présente une architecture client–serveur et une communication via Websockets. Elle permet une authentification simple, la création de lobbies, la possibilité de jouer plusieurs parties en parallèle et le stockage de statistiques dans MongoDB.
 
-## 2. Objectifs du projet
-
-- Mettre en place une architecture de jeu en temps réel (Node.js + WebSocket)
-- Structurer une SPA Cordova (HTML/CSS/JS) et l’adapter aux contraintes mobiles (contrôles tactiles et interface _responsive_).
-- Gérer des lobbies multijoueur (création, pagination, recherche, état “prêt”, compte à rebours).
-- Implémenter des mécaniques de jeu 2D (mouvements, collisions, détection de victoire/défaite).
-- Stocker des statistiques (victoires/défaites) sur MongoDB et établir un classement des meilleurs joueurs.
-
-## 3. Architecture du système
+## 2. Architecture du système
 
 | Couche                   | Rôle                                                       | Fichiers clés                                                                                                                  |
 | ------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Client Cordova           | UI, contrôles clavier/tactile, rendu des trails            | `client/www/index.html`, `client/www/css/tron.css`, `client/www/js/*`                                                          |
 | Communication temps réel | Messages JSON sur WebSocket                                | `client/www/js/init.js`, `client/www/js/WebsocketClient.js`                                                                    |
 | Serveur Node.js          | Gestion des connexions, lobbies, boucle de jeu, collisions | `serveur/WebsocketServer.js`, `serveur/GameHandler.js`, `serveur/Game.js`, `serveur/Player.js`                                 |
-| Base de données          | Persistance des joueurs et du leaderboard                  | MongoDB (URL par défaut `mongodb://127.0.0.1:27017/mongo-data` dans `serveur/db.js`), schémas Mongoose dans `serveur/models/*` |
+| Base de données          | Stockage des joueurs et des parties                        | MongoDB (URL par défaut `mongodb://127.0.0.1:27017/mongo-data` dans `serveur/db.js`), schémas Mongoose dans `serveur/models/*` |
 
-## 4. Backend (dossier `serveur/`)
+## 3. Backend (dossier `serveur/`)
 
 - **Point d’entrée (`WebsocketServer.js`)** : expose le serveur WebSocket sur le port 9898 et route les messages (`connectionPlayer`, `getAllLobbies`, `createGame`, `joinGame`, `leaveLobby`, `playerReady`, `playerMovement`, `restartGame`, `getLeaderboard`, etc.).
-- **Orchestration (`GameHandler.js`)** : gère les connexions actives, les lobbies, le compte à rebours, la diffusion des états de jeu et la persistance.
-- **Modèle de partie (`Game.js`)** : gère la grille (100×100), la boucle de tick, la détection de collisions (bords ou trail existant) et l’annonce du vainqueur.
-- **Modèle de joueur (`Player.js`)** : stocke la position, la direction courante, la couleur, l'état `alive/ready`, empêche les demi-tours.
-- **Lobbies** : création avec nom + capacité (2 à 4), système de recherche, attente que tous les joueurs sont prêts (compte à rebours, kick si délai dépassé).
-- **Persistance MongoDB** : collections `players` (identifiant, mot de passe en clair, victoires/défaites) et `games` (historique des parties, gagnant). Connexion par défaut dans `db.js`.
+- **Handler (`GameHandler.js`)** : gère les connexions actives, les lobbies, le compte à rebours, la diffusion des états de jeu et le stockage en base de données.
+- **Modèle de partie (`Game.js`)** : gère la grille, l'intervalle de jeu, la détection de collisions, etc.
+- **Modèle de joueur (`Player.js`)** : stocke la position, la direction courante, la couleur, l'état `alive/ready` et empêche les demi-tours.
+- **Lobbies** : permet la création avec un nom et une capacité (2 à 4), comprend un système de recherche et l'attente que tous les joueurs soient prêts (compte à rebours, expulsion lorsque le délai est dépassé).
+- **MongoDB** : collections `players` (identifiant, mot de passe en clair, victoires/défaites) et `games` (historique des parties, gagnant). Connexion par défaut dans `db.js`.
 
-## 5. Frontend Cordova (dosser `client/`)
+## 4. Frontend Cordova (dosser `client/`)
 
 - **Écrans** : connexion, accueil (choix couleur), lobby (création/recherche/pagination), partie, fin de partie, leaderboard.
-- **Flux WebSocket** : initialisé dans `www/js/init.js` (`global.ws = new WebSocket("ws://localhost:9898/");`) puis centralisé dans `www/js/WebsocketClient.js` qui distribue les paquets vers les handlers.
+- **Communication WebSocket** : initialisée dans `www/js/init.js` (`global.ws = new WebSocket("ws://localhost:9898/");`) puis centralisée dans `www/js/WebsocketClient.js` qui distribue les paquets vers les handlers.
 - **Handlers** :
   - `ConnectionHandler.js` : connexion utilisateur, stockage temporaire du mot de passe (5 min) via `localStorage`, navigation vers l’accueil.
   - `LobbyHandler.js` : récupération/affichage des lobbies, bouton “Prêt ?”, compte à rebours, join/quit, pagination (2 lobbies par page) et recherche.
@@ -41,6 +33,15 @@ Ce projet est un jeu multijoueur inspiré de Tron, jouable à la fois dans le na
   - `ControlHandler.js` : envoi des déplacements (touches fléchées ou boutons tactiles), blocage des directions impossibles (demi-tour).
   - `LeaderboardHandler.js` : affichage du classement (victoires/défaites).
 - **Styles** : `www/css/tron.css` pour obtenir un thème néon et l'affichage des contrôles pour téléphone.
+
+## 5. Base de données MongoDB
+
+Pour tester la fonctionnalité de classement, nous avons fourni une base de données pré-remplie.
+
+Voici les 5 joueurs de la base de données :
+`xebec`, `bilbo`, `zack`, `imu` et `c#`.
+
+Tous les joueurs ont le même mot de passe : `a`.
 
 ## 6. Documentation de déploiement
 
@@ -76,6 +77,12 @@ node WebsocketServer.js   # WebSocket exposé sur ws://localhost:9898/, à chang
 
 ### 6.3 Lancer le client Cordova (navigateur)
 
+- Si besoin, dans `init.js`, remplacez `localhost` par l'adresse IP Websocket pour celle du serveur sur votre réseau :
+
+```js
+global.ws = new WebSocket("ws://localhost:9898/");
+```
+
 - Après avoir lancé le serveur (voir étape précédente), il faut désormais lancer un client :
 
 ```sh
@@ -90,6 +97,12 @@ cordova run browser            # ouvre l’app dans le navigateur
 
 ### 6.4 Lancer le client sur Android
 
+- Si besoin, dans `init.js`, remplacez `localhost` par l'adresse IP Websocket pour celle du serveur sur votre réseau :
+
+```js
+global.ws = new WebSocket("ws://localhost:9898/");
+```
+
 - S'assurer de bien avoir lancé le serveur (voir étape 6.2).
 
 - Pour lancer le client sur Android, vous aurez besoin d'[Android Studio](https://developer.android.com/studio?hl=fr).
@@ -101,6 +114,7 @@ cordova run browser            # ouvre l’app dans le navigateur
 cd client
 # Activer l'environnement conda DevWeb pour avoir cordova (cf. Moodle pour la mise en place de cet environnement)
 conda activate DevWeb
+
 ```
 
 - Ajoutez la plateforme Android :
@@ -118,41 +132,7 @@ cordova build android
 cordova run android
 ```
 
-## 7. Structure du dépôt
-
-- 📁 **serveur/**
-
-  - 📁 **models/**
-    - 📄 `PlayerModel.js`
-    - 📄 `GameModel.js`
-  - 📄 `db.js`
-  - 📄 `Game.js`
-  - 📄 `GameHandler.js`
-  - 📄 `Player.js`
-  - 📄 `WebsocketServer.js`
-
-- 📁 **client/**
-  - 📁 **www/**
-    - 📁 **css/**
-      - 📄 `tron.css`
-    - 📁 **fonts/**
-    - 📁 **img/**
-    - 📁 **js/**
-      - 📁 **handlers/**
-        - 📄 `ConnectionHandler.js`
-        - 📄 `ControlHandler.js`
-        - 📄 `GameHandler.js`
-        - 📄 `LeaderboardHandler.js`
-        - 📄 `LobbyHandler.js`
-      - 📄 `global.js`
-      - 📄 `init.js`
-      - 📄 `WebsocketClient.js`
-  - 📄 `index.html`
-- 📁 **mongo_data/**
-- 📄 `specification_paquets.md`
-- 📄 `README.md`
-
-## 8. Fonctionnalités implémentées
+## 7. Fonctionnalités implémentées
 
 - Authentification simple (identifiant + mot de passe) avec stockage local temporaire dans le navigateur.
 - Choix de couleur du joueur et affichage du pseudo connecté.
